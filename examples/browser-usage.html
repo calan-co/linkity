@@ -1,0 +1,38 @@
+// linkity/examples/browser-usage.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linkity Browser Example</title>
+  </head>
+  <body>
+    <h1>Linkity Browser Example</h1>
+
+    <textarea id="input" rows="10" cols="50">
+Check out [[Obsidian]] for wikilinks!
+Also see [GitHub](https://github.com) for markdown links.
+Visit https://example.com directly.
+  </textarea
+    >
+
+    <button id="parse">Parse Links</button>
+
+    <pre id="output"></pre>
+
+    <script type="module">
+      // Import from the browser build
+      import { parseLinks, detectLinkType } from "../dist/index.browser.mjs";
+
+      document.getElementById("parse").addEventListener("click", () => {
+        const text = document.getElementById("input").value;
+        const links = parseLinks(text);
+        document.getElementById("output").textContent = JSON.stringify(
+          links,
+          null,
+          2
+        );
+      });
+    </script>
+  </body>
+</html>
