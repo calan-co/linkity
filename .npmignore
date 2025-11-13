@@ -1,0 +1,27 @@
+# Source files
+src/
+test/
+examples/
+docs/
+
+# Configuration
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+.editorconfig
+
+# Development
+.git/
+.github/
+*.test.ts
+*.spec.ts
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.gitignore
+.npmignore
+*.md
+!README.md
