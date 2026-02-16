@@ -12,6 +12,7 @@
 ### Problem Statement
 
 Markdown power users, Obsidian/Foam vault users, and GitHub documentation maintainers lack native VS Code support for `[[wikilink]]`-style references. This forces users to:
+
 - Switch between VS Code and Obsidian/Foam for wikilink-based workflows
 - Manually verify wikilink targets exist
 - Lose navigation capabilities (Go to Definition, autocomplete) for wikilinks
@@ -20,6 +21,7 @@ Markdown power users, Obsidian/Foam vault users, and GitHub documentation mainta
 ### Proposed Solution
 
 Build a comprehensive VS Code extension that enhances native markdown tooling with full `[[wikilink]]` support. The extension will:
+
 - Parse wikilinks using the battle-tested **linkity** parsing library
 - Resolve wikilinks to workspace files with smart ambiguity handling
 - Provide VS Code language features (hover, definition, completion, links)
@@ -30,17 +32,20 @@ Build a comprehensive VS Code extension that enhances native markdown tooling wi
 ### Success Criteria
 
 **User Adoption:**
+
 - 10,000+ installs within 6 months
 - 4.5+ star rating on VS Code marketplace
 - <10% uninstall rate
 
 **Performance:**
+
 - <200ms hover/completion response time on 500+ link documents
 - <50ms link resolution per wikilink
 - <1s workspace indexing for 1,000-file vaults
 - <5s backlinks refresh on document save
 
 **Functionality:**
+
 - 95%+ wikilink resolution accuracy on test vaults (Obsidian, Foam, custom)
 - 100% parity with Obsidian link syntax (aliases, anchors, embeds)
 - Zero false positives in code blocks/inline code
@@ -60,6 +65,7 @@ Build a comprehensive VS Code extension that enhances native markdown tooling wi
 ### User Stories
 
 **As a knowledge worker**, I want to:
+
 - Use `[[wikilinks]]` in VS Code markdown files with full IDE support
 - Navigate between notes using Ctrl+Click on wikilinks
 - See hover previews of linked files
@@ -68,17 +74,20 @@ Build a comprehensive VS Code extension that enhances native markdown tooling wi
 - See incoming/outgoing backlinks for the current note
 
 **As a Foam user**, I want to:
+
 - Auto-generate markdown reference definitions for GitHub compatibility
 - Configure reference generation to run on save or manually
 - Preserve manually-edited reference descriptions
 
 **As an Obsidian power user**, I want to:
+
 - Support for aliases: `[[Target|Display Text]]`
 - Support for heading anchors: `[[Note#Heading]]`
 - Support for block IDs: `[[Note#^blockid]]`
 - File rename synchronization (update all affected wikilinks)
 
 **As a team lead**, I want to:
+
 - Validate all wikilinks in the workspace (no broken links)
 - Quick-fix suggestions for unresolved links (create file, link to similar)
 - Configurable validation severity (error, warning, info)
@@ -86,29 +95,34 @@ Build a comprehensive VS Code extension that enhances native markdown tooling wi
 ### Key Workflows
 
 #### 1. Link Creation & Navigation
-```
+
+```text
 User types [[ → Extension shows autocomplete → Select file → Link created
 User Ctrl+Clicks [[link]] → Opens target file
 User hovers [[link]] → Sees preview
 ```
 
 #### 2. Reference Generation (Foam Mode)
-```
-User saves document → Extension detects wikilinks → 
+
+```text
+User saves document → Extension detects wikilinks →
   If autoGenerate enabled → Appends reference definitions
   Else → Shows notification "Generate references?"
 ```
 
 #### 3. File Rename
-```
+
+```text
 User renames file.md → Extension detects rename →
 Shows notification "Update 42 links?" → User confirms →
 All wikilinks updated across workspace
 ```
 
 #### 4. Backlinks Exploration
-```
+
+```text
 User opens document → Backlinks panel shows:
+
 - 5 incoming links (files linking TO this file)
 - 8 outgoing links (files this file links TO)
 User clicks link → Opens in editor
@@ -120,7 +134,7 @@ User clicks link → Opens in editor
 
 ### Architecture Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────┐
 │         VS Code Extension Host                  │
 ├─────────────────────────────────────────────────┤
@@ -158,23 +172,27 @@ User clicks link → Opens in editor
 ### Tech Stack
 
 **Core:**
+
 - **Language**: TypeScript 5.x
 - **Runtime**: VS Code Extension API 1.85+
 - **Parser**: linkity ^1.0.0 (zero-dependency wikilink parser)
 
 **Development:**
+
 - **Build**: esbuild (fast bundling)
 - **Testing**: Vitest + @vscode/test-electron
 - **Linting**: ESLint + Prettier
 - **CI/CD**: GitHub Actions
 
 **Visualization:**
+
 - **Graph**: D3.js v7 (force-directed layout)
 - **UI**: VS Code Webview API + HTML/CSS
 
 ### Core Modules
 
 #### 1. Linkity Integration (`src/core/LinkityAdapter.ts`)
+
 ```typescript
 import { parseWikilink, LinkNode } from 'linkity';
 
@@ -194,6 +212,7 @@ export class LinkityAdapter {
 ```
 
 #### 2. Workspace Scanner (`src/services/WorkspaceScanner.ts`)
+
 - Index all markdown files in workspace on activation
 - Maintain file map: `{filename: [full/path1, full/path2]}`
 - Detect ambiguous filenames
@@ -201,8 +220,10 @@ export class LinkityAdapter {
 - Performance: <1s for 1,000 files, <5s for 10,000 files
 
 #### 3. Filename Resolver (`src/services/FilenameResolver.ts`)
+
 - Resolve wikilink `value` to absolute file URI
 - Support resolution strategies:
+
   - `firstMatch`: Use first found file
   - `mostSpecific`: Use file with shortest unique path
   - `interactive`: Prompt user when ambiguous
@@ -210,17 +231,21 @@ export class LinkityAdapter {
 - Support configurable root folder offset
 
 #### 4. Backlinks Index (`src/services/BacklinksIndex.ts`)
+
 - Build reverse index: `{targetFile: [sourceFile1, sourceFile2]}`
 - Update incrementally on document changes
 - Support anchor-level backlinks
 - Query API: `getIncomingLinks(uri)`, `getOutgoingLinks(uri)`
 
 #### 5. Reference Generator (`src/services/ReferenceGenerator.ts`)
+
 - Scan document for wikilinks
 - Convert to markdown reference format:
+
   ```markdown
   [[file|Custom Text]] → [Custom Text]: /path/to/file.md
   ```
+
 - Idempotent: update existing, don't duplicate
 - Mark auto-generated section with HTML comment
 - Preserve manually-edited descriptions
@@ -228,6 +253,7 @@ export class LinkityAdapter {
 ### VS Code Provider Integration
 
 #### DocumentLinkProvider
+
 ```typescript
 provideDocumentLinks(document: TextDocument): DocumentLink[] {
   const text = document.getText();
@@ -245,6 +271,7 @@ provideDocumentLinks(document: TextDocument): DocumentLink[] {
 ```
 
 #### CompletionItemProvider
+
 ```typescript
 provideCompletionItems(document: TextDocument, position: Position): CompletionItem[] {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
@@ -344,6 +371,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 
 - **Daily active users**: 60% of installs
 - **Feature usage**:
+
   - Link navigation: 80% of users
   - Autocomplete: 70% of users
   - Backlinks panel: 40% of users
@@ -378,6 +406,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 ## Timeline & Milestones
 
 ### Phase 1: MVP (Weeks 1-4) - 54 hours
+
 **Goal**: Core functionality with link resolution and basic providers
 
 - Bootstrap extension project (8h)
@@ -391,6 +420,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 **Deliverable**: Extension with working link navigation, hover, and autocomplete
 
 ### Phase 2: Advanced Features (Weeks 5-8) - 49 hours
+
 **Goal**: File synchronization, backlinks, validation, references
 
 - Backlinks indexing and panel (12h)
@@ -404,6 +434,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 **Deliverable**: Full-featured extension with backlinks and reference generation
 
 ### Phase 3: Visualization (Weeks 9-10) - 16 hours
+
 **Goal**: Graph panel for knowledge exploration
 
 - Graph panel implementation (12h)
@@ -412,6 +443,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 **Deliverable**: Interactive graph visualization
 
 ### Phase 4: Polish & Release (Weeks 11-12) - 28 hours
+
 **Goal**: Production-ready extension
 
 - Comprehensive testing suite (20h)
@@ -452,6 +484,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 | Open source | ✅ Yes | ❌ No | ✅ Yes | ✅ Yes |
 
 **Unique Value Props:**
+
 1. **Best-in-class parsing**: Using linkity library (battle-tested, zero deps)
 2. **Implementation-agnostic**: Supports Obsidian, Foam, and GFM equally
 3. **Reference generation control**: Auto AND manual, with conflict detection

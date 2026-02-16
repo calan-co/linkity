@@ -21,6 +21,9 @@ notes:
       - ✅ Extension compiles: 92.6KB bundled output
       - ✅ Resolved 3 code TODOs with design documentation
       - ⚠️ TypeScript: 9 errors in foam layer (non-core), 6 unused warnings in extension
+  - timestamp: 2026-02-16T13:05:00Z
+    note: |
+      PRD markdown formatting updated to address MD022/MD031/MD032/MD040/MD060.
 ---
 
 # Work Item 7: Polish & QA
