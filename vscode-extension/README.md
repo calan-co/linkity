@@ -8,31 +8,37 @@ Complete [[wikilink]] support for VS Code—powered by linkity. Features navigat
 ## Features
 
 🔗 **Full Wikilink Support**
+
 - Parse `[[Page]]` and `[[Page|Alias]]` syntax
 - Anchor support: `[[Page#Heading]]`
 - Block references: `[[Page#^blockid]]`
 
 🎯 **Rich IDE Features**
+
 - **Click to navigate**: Ctrl+Click on wikilinks to open files
 - **Hover previews**: See file content on hover
 - **Autocomplete**: Suggestions when typing `[[`
 - **Go to Definition**: F12 or right-click "Go to Definition"
 
 🔍 **Backlinks Panel**
+
 - See all files linking to current document
 - See all files current document links to
 - Click to navigate between documents
 
-📊 **Knowledge Graph** (Coming Soon)
+📊 **Knowledge Graph**
+
 - Interactive force-directed graph visualization
 - Explore relationships between notes
 
 🔄 **Reference Generation**
+
 - Convert wikilinks to markdown reference definitions
 - Auto-generation on save (configurable, OFF by default)
 - Perfect for GitHub/GFM compatibility
 
 ⚡ **Performance**
+
 - Fast: <1s workspace indexing for 1,000 files
 - Smart: mostSpecific resolution strategy for ambiguous links
 - Lightweight: Built on [linkity](https://github.com/user/linkity) (zero dependencies)
@@ -45,6 +51,7 @@ Complete [[wikilink]] support for VS Code—powered by linkity. Features navigat
 4. Click Install
 
 Or install from VSIX:
+
 ```bash
 code --install-extension vscode-wikilinks-0.1.0.vsix
 ```
@@ -81,6 +88,7 @@ For GitHub compatibility, convert wikilinks to standard markdown references:
 2. Run "Wikilinks: Generate Reference Definitions"
 
 Result:
+
 ```markdown
 Check out [[My Note|the docs]].
 
@@ -120,6 +128,7 @@ Configure in VS Code settings (`settings.json`):
 ### Resolution Strategies
 
 **mostSpecific** (recommended): Choose file with shortest relative path from source
+
 ```
 Source: /notes/work/tasks.md
 Link: [[project]]
@@ -129,7 +138,7 @@ Result: /notes/work/project.md (closer to source)
 
 **firstMatch**: Use first file found (fastest, but less accurate)
 
-**interactive**: Prompt user when ambiguous (coming soon)
+**interactive**: Prompt user when ambiguous (on explicit navigation actions)
 
 ## Commands
 
@@ -143,16 +152,19 @@ Result: /notes/work/project.md (closer to source)
 ## Ecosystem Compatibility
 
 ### Obsidian
+
 ✅ Wikilinks, aliases, anchors  
 ✅ Block references  
 ⚠️ Embeds (coming soon)
 
 ### Foam
+
 ✅ All Foam syntax  
 ✅ Reference generation  
 ✅ GitHub Pages compatibility
 
 ### GitHub Flavored Markdown (GFM)
+
 ✅ Reference definitions work on GitHub  
 ✅ Configurable auto-generation
 
@@ -167,6 +179,7 @@ Result: /notes/work/project.md (closer to source)
 ## Performance
 
 Benchmarks on MacBook Pro M1:
+
 - 1,000 files: <1s indexing
 - 10,000 files: <5s indexing
 - Link resolution: <50ms per link
@@ -175,16 +188,19 @@ Benchmarks on MacBook Pro M1:
 ## Troubleshooting
 
 ### Links not working
+
 1. Run "Wikilinks: Rebuild Workspace Index"
 2. Check `wikilinks.enabled` is `true`
 3. Ensure file exists and isn't in exclude patterns
 
 ### Ambiguous links resolved incorrectly
+
 - Use `mostSpecific` strategy (default)
 - Add `.md` extension: `[[note.md]]` instead of `[[note]]`
 - Use relative paths in alias
 
 ### References not generating
+
 - Check `wikilinks.autoGenerateReferences` setting
 - Manually run "Generate Reference Definitions" command
 
@@ -203,6 +219,7 @@ Built with [linkity](https://github.com/user/linkity) - a zero-dependency wikili
 ## Changelog
 
 ### 0.1.0 (Initial Release)
+
 - ✨ Wikilink parsing and resolution
 - ✨ Link, Hover, Definition, Completion providers
 - ✨ Backlinks panel

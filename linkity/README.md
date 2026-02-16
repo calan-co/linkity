@@ -64,6 +64,20 @@ Parses input text and returns an array of LinkNode ASTs for all detected links.
 - `enableUrl?: boolean` - Enable raw URL parsing (default: `true`)
 - `customSchemes?: string[]` - Additional URL schemes to recognize
 
+**Example:**
+
+```typescript
+import { parseLinks } from "linkity";
+
+const text = "Check [[Page]] and https://example.com";
+const links = parseLinks(text, {
+  enableMarkdown: false,
+  customSchemes: ["obsidian", "vscode"]
+});
+
+console.log(links);
+```
+
 ### `detectLinkType(str: string): LinkType | null`
 
 Detects the link type from a string.
@@ -84,6 +98,24 @@ interface LinkNode {
   };
   data?: Record<string, any>;
 }
+
+**Output Example:**
+
+```json
+[
+  {
+    "type": "wikilink",
+    "value": "Page",
+    "position": { "start": 6, "end": 14 }
+  },
+  {
+    "type": "url",
+    "value": "https://example.com",
+    "position": { "start": 19, "end": 38 }
+  }
+]
+```
+
 ```
 
 ## Examples
