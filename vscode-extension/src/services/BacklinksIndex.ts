@@ -56,7 +56,10 @@ export class BacklinksIndex {
             targetUri,
             linkText: link.alias || link.value,
             anchor: link.anchor,
-            position: new vscode.Position(0, 0) // TODO: Calculate actual position
+            position: new vscode.Position(0, 0) // Placeholder: currently uses file start
+            // TODO: Calculate actual line:column from LinkNode.position (character offsets)
+            // Enhancement: Parse source file to map character offset -> (line, column)
+            // See: work-item-08-feature-enhancements.md for implementation
           };
           
           this.addLink(entry);

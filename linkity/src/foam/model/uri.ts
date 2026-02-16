@@ -439,7 +439,9 @@ function encodeURIComponentMinimal(path: string): string {
  * it will be forced to be a subfolder of the first base folder
  * @returns an absolute uri
  *
- * TODO this probably needs to be moved to the workspace service
+ * NOTE: This is part of the Foam compatibility layer and is used for handling
+ * workspace-relative URI resolution. It could potentially be moved to a dedicated
+ * workspace service in future refactoring, but it's appropriate here for now.
  */
 export function asAbsoluteUri(
   uriOrPath: URI | string,

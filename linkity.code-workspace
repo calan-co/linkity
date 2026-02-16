@@ -1,10 +1,13 @@
 {
   "folders": [
-	{
-		"path": "linkity"
-	},
-	{
-		"path": "vscode-extension"
-	}
-]
+    {
+      "path": "linkity",
+    },
+    {
+      "path": "vscode-extension",
+    },
+    {
+      "path": ".",
+    },
+  ],
 }

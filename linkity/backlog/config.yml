@@ -1,16 +1,17 @@
 project_name: "linkity"
 default_status: "proposed"
-statuses: [
-              "proposed",
-              "accepted",
-              "inProgress",
-              "review",
-              "approved", 
-              "rejected",
-              "complete",
-              "duplicate",
-              "deprecated"
-            ]
+statuses:
+  [
+    "proposed",
+    "accepted",
+    "inProgress",
+    "review",
+    "approved",
+    "rejected",
+    "complete",
+    "duplicate",
+    "deprecated",
+  ]
 labels: []
 milestones: []
 date_format: yyyy-mm-dd
@@ -22,3 +23,4 @@ auto_commit: false
 bypass_git_hooks: false
 check_active_branches: true
 active_branch_days: 30
+task_prefix: "task"

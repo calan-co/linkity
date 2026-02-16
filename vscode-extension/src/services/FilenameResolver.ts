@@ -42,8 +42,11 @@ export class FilenameResolver {
         return this.resolveMostSpecific(matches, options.sourceFileUri);
       
       case 'interactive':
-        // For now, fall back to mostSpecific
-        // TODO: Implement interactive picker
+        // Interactive picker for ambiguous matches
+        // When multiple files match a link, show window.showQuickPick() UI
+        // For now, falls back to mostSpecific strategy
+        // TODO: Implement window.showQuickPick() UI for user selection
+        // See: work-item-08-feature-enhancements.md for implementation
         return this.resolveMostSpecific(matches, options.sourceFileUri);
       
       default:
