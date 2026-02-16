@@ -4,6 +4,8 @@ priority: p1
 estimated_hours: 16
 actual_hours: 8
 completion_date: 2026-02-16
+related_commits:
+  - eb39b35 (feat: implement VS Code language providers for rich IDE features)
 dependencies: [work-item-02-resolution]
 tags: [references, foam, github-compat]
 created_date: 2026-02-16
@@ -12,9 +14,11 @@ created_date: 2026-02-16
 # Work Item 5: Reference Generation (Manual & Auto)
 
 ## Goal
+
 Implement reference link generation to convert wikilinks into standard markdown reference definitions, enabling GitHub/GFM compatibility (critical for Foam users).
 
 ## Tasks
+
 - [ ] Implement ReferenceGenerator service
   - [ ] Scan document for all wikilinks  
   - [ ] Convert to markdown reference format: `[text]: /path`
@@ -34,6 +38,7 @@ Implement reference link generation to convert wikilinks into standard markdown 
 ## Technical Details
 
 ### Reference Generation Example
+
 ```markdown
 Input:
 Check out [[Project Notes|the project]] and [[Meeting Notes]].
@@ -46,6 +51,7 @@ Output (appended):
 ```
 
 ### ReferenceGenerator API
+
 ```typescript
 export class ReferenceGenerator {
   async generateForDocument(document: TextDocument): Promise<TextEdit[]>
@@ -56,6 +62,7 @@ export class ReferenceGenerator {
 ```
 
 ## Deliverables
+
 1. ReferenceGenerator service with idempotent generation
 2. Manual command: "Wikilinks: Generate References"
 3. Auto-generation on save (configurable, OFF by default)
@@ -63,6 +70,7 @@ export class ReferenceGenerator {
 5. Tests for edge cases
 
 ## Acceptance Criteria
+
 1. Generates references for all wikilinks in document
 2. Uses alias as reference text when present
 3. Idempotent: running twice produces same output
@@ -73,9 +81,11 @@ export class ReferenceGenerator {
 8. Performance: <500ms for 100-link document
 
 ## Dependencies
+
 - Work Item 2: FilenameResolver
 
 ## Notes
+
 - Default to OFF to avoid surprising users
 - Show one-time notification explaining auto-generation
 - Consider diff preview before applying changes

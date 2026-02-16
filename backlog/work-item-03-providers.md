@@ -4,6 +4,9 @@ priority: p0
 estimated_hours: 18
 actual_hours: 10
 completion_date: 2026-02-16
+related_commits:
+  - eb39b35 (feat: implement VS Code language providers for rich IDE features)
+  - d201dec (feat: add TextMate grammar for wikilink syntax highlighting)
 dependencies: [work-item-01-bootstrap, work-item-02-resolution]
 tags: [providers, user-experience]
 created_date: 2026-02-16
@@ -12,12 +15,15 @@ created_date: 2026-02-16
 # Work Item 3: VS Code Language Providers
 
 ## Goal
+
 Implement VS Code language service providers (DocumentLink, Hover, Definition, Completion) to provide rich IDE features for wikilinks.
 
 ## Background
+
 VS Code's language provider APIs enable features like Ctrl+Click navigation, hover previews, autocomplete, and "Go to Definition". These are critical for a production-quality wikilink experience.
 
 ## Tasks
+
 - [ ] Implement DocumentLinkProvider
   - [ ] Parse document for wikilinks using LinkityAdapter
   - [ ] Resolve each wikilink to target URI
@@ -45,6 +51,7 @@ VS Code's language provider APIs enable features like Ctrl+Click navigation, hov
 ## Technical Details
 
 ### DocumentLinkProvider Implementation
+
 ```typescript
 export class WikilinkDocumentLinkProvider implements vscode.DocumentLinkProvider {
   constructor(
@@ -78,6 +85,7 @@ export class WikilinkDocumentLinkProvider implements vscode.DocumentLinkProvider
 ```
 
 ### CompletionItemProvider Implementation
+
 ```typescript
 export class WikilinkCompletionProvider implements vscode.CompletionItemProvider {
   constructor(private scanner: WorkspaceScanner) {}
@@ -107,6 +115,7 @@ export class WikilinkCompletionProvider implements vscode.CompletionItemProvider
 ```
 
 ## Deliverables
+
 1. DocumentLinkProvider with Ctrl+Click navigation
 2. HoverProvider with file previews
 3. DefinitionProvider with "Go to Definition" support
@@ -117,6 +126,7 @@ export class WikilinkCompletionProvider implements vscode.CompletionItemProvider
 ## Acceptance Criteria
 
 ### DocumentLinkProvider
+
 1. Detects all wikilinks in document
 2. Makes wikilinks clickable (underlined on hover)
 3. Ctrl+Click opens target file
@@ -125,6 +135,7 @@ export class WikilinkCompletionProvider implements vscode.CompletionItemProvider
 6. Performance: <200ms for 500-link document
 
 ### HoverProvider
+
 1. Shows hover card on wikilink hover
 2. Displays target file path
 3. Shows 200-char preview of target file
@@ -133,12 +144,14 @@ export class WikilinkCompletionProvider implements vscode.CompletionItemProvider
 6. Performance: <200ms response time
 
 ### DefinitionProvider
+
 1. F12 or Ctrl+Click navigates to target
 2. Supports anchor navigation ([[file#heading]])
 3. Highlights target line if anchor provided
 4. Shows error message for unresolved links
 
 ### CompletionItemProvider
+
 1. Triggers on `[[` input
 2. Shows all markdown files in workspace
 3. Filters by partial input (fuzzy matching)
@@ -147,10 +160,12 @@ export class WikilinkCompletionProvider implements vscode.CompletionItemProvider
 6. Performance: <200ms for 1k file workspace
 
 ## Dependencies
+
 - Work Item 1: LinkityAdapter
 - Work Item 2: FilenameResolver and WorkspaceScanner
 
 ## Test Cases
+
 ```typescript
 describe('Providers', () => {
   describe('DocumentLinkProvider', () => {
@@ -175,6 +190,7 @@ describe('Providers', () => {
 ```
 
 ## Notes
+
 - Use DocumentSelector to activate only on markdown files
 - Consider caching hover content per file for performance
 - Handle long hover previews with truncation

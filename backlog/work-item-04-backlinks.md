@@ -4,6 +4,8 @@ priority: p1
 estimated_hours: 14
 actual_hours: 8
 completion_date: 2026-02-16
+related_commits:
+  - eb39b35 (feat: implement VS Code language providers for rich IDE features)
 dependencies: [work-item-02-resolution]
 tags: [backlinks, visualization, user-experience]
 created_date: 2026-02-16
@@ -12,12 +14,15 @@ created_date: 2026-02-16
 # Work Item 4: Backlinks Index & Sidebar Panel
 
 ## Goal
+
 Build a reverse index of all wikilink relationships and create a VS Code sidebar panel showing incoming/outgoing links for the active document.
 
 ## Background
+
 Backlinks are a core feature of knowledge management systems like Obsidian and Foam. Users need to see which documents reference the current document (incoming) and which documents the current document references (outgoing).
 
 ## Tasks
+
 - [ ] Implement BacklinksIndex service
   - [ ] Build reverse index: `{targetUri: [sourceUri1, sourceUri2]}`
   - [ ] Index all workspace documents on activation
@@ -43,6 +48,7 @@ Backlinks are a core feature of knowledge management systems like Obsidian and F
 ## Technical Details
 
 ### BacklinksIndex API
+
 ```typescript
 export interface BacklinkEntry {
   sourceUri: Uri;
@@ -66,7 +72,8 @@ export class BacklinksIndex {
 ```
 
 ### TreeView Structure
-```
+
+```ascii-tree
 Backlinks (5)
 ├── Incoming Links (3)
 │   ├── project-notes.md
@@ -78,6 +85,7 @@ Backlinks (5)
 ```
 
 ### BacklinksTreeDataProvider
+
 ```typescript
 export class BacklinksTreeDataProvider implements vscode.TreeDataProvider<BacklinkItem> {
   constructor(private index: BacklinksIndex) {}
@@ -104,6 +112,7 @@ export class BacklinksTreeDataProvider implements vscode.TreeDataProvider<Backli
 ```
 
 ## Deliverables
+
 1. BacklinksIndex service with full workspace indexing
 2. BacklinksTreeDataProvider for VS Code TreeView
 3. Sidebar panel showing backlinks for active document
@@ -113,6 +122,7 @@ export class BacklinksTreeDataProvider implements vscode.TreeDataProvider<Backli
 ## Acceptance Criteria
 
 ### BacklinksIndex
+
 1. Indexes 1,000 files in <2s on activation
 2. Incremental update <200ms per document save
 3. Correctly tracks incoming/outgoing relationships
@@ -121,6 +131,7 @@ export class BacklinksTreeDataProvider implements vscode.TreeDataProvider<Backli
 6. Memory usage <20MB for 1k files
 
 ### Backlinks Panel
+
 1. Shows in sidebar under Explorer view
 2. Displays incoming and outgoing link counts
 3. Updates when active editor changes (<500ms)
@@ -130,15 +141,18 @@ export class BacklinksTreeDataProvider implements vscode.TreeDataProvider<Backli
 7. Works with excludePatterns config
 
 ### User Experience
+
 1. Panel visible when markdown file is active
 2. Hidden when non-markdown file is active
 3. Shows loading spinner during index build
 4. Handles large link counts (100+ per file) without lag
 
 ## Dependencies
+
 - Work Item 2: FilenameResolver (for resolving wikilinks in index)
 
 ## Test Cases
+
 ```typescript
 describe('BacklinksIndex', () => {
   it('builds index from workspace')
@@ -159,6 +173,7 @@ describe('BacklinksTreeDataProvider', () => {
 ```
 
 ## Notes
+
 - Consider showing link context (surrounding text) in hover
 - Future enhancement: Group by folder or tag
 - Future enhancement: Show anchor targets in tree

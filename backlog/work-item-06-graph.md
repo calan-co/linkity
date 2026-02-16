@@ -5,6 +5,10 @@ estimated_hours: 16
 actual_hours: 14
 start_date: 2026-02-16
 completion_date: 2026-02-16
+related_commits:
+  - 6048bac (feat: implement knowledge graph visualization with D3.js)
+  - b32432a (docs: mark work-item-06-graph as completed)
+  - 0fdb116 (docs: add comprehensive graph visualization implementation summary)
 dependencies: [work-item-04-backlinks]
 tags: [visualization, graph, webview]
 created_date: 2026-02-16
@@ -13,9 +17,11 @@ created_date: 2026-02-16
 # Work Item 6: Knowledge Graph Visualization
 
 ## Goal
+
 Create an interactive force-directed graph visualization showing file relationships as nodes and wikilinks as edges.
 
 ## Tasks
+
 - [x] Create GraphPanel webview
   - [x] Register webview panel in extension
   - [x] HTML/CSS/JS for graph rendering
@@ -42,6 +48,7 @@ Create an interactive force-directed graph visualization showing file relationsh
 ## Technical Details
 
 ### Graph Data Format
+
 ```typescript
 interface GraphNode {
   id: string;        // File URI
@@ -63,6 +70,7 @@ interface GraphData {
 ```
 
 ### D3.js Force Simulation
+
 ```javascript
 const simulation = d3.forceSimulation(nodes)
   .force('link', d3.forceLink(edges).id(d => d.id))
@@ -72,6 +80,7 @@ const simulation = d3.forceSimulation(nodes)
 ```
 
 ## Deliverables
+
 1. GraphPanel webview with D3.js visualization
 2. Command: "Wikilinks: Show Knowledge Graph"
 3. Interactive controls (zoom, pan, filter)
@@ -79,6 +88,7 @@ const simulation = d3.forceSimulation(nodes)
 5. Export graph as SVG/PNG
 
 ## Acceptance Criteria
+
 - [x] Opens graph panel with command
 - [x] Shows all files as nodes, wikilinks as edges
 - [x] Double-click node opens file in editor
@@ -89,9 +99,11 @@ const simulation = d3.forceSimulation(nodes)
 - [x] Color-codes by link count (visual heatmap via viridis scale)
 
 ## Dependencies
+
 - Work Item 4: BacklinksIndex (provides graph data)
 
 ## Notes
+
 - GraphPanel (322 lines) creates interactive webview with D3.js v7
 - GraphBuilder (114 lines) handles graph construction and statistics
 - GraphBuilder.test.ts (7 tests) validates graph building logic
