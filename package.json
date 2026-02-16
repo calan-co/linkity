@@ -1,0 +1,161 @@
+{
+  "name": "vscode-wikilinks",
+  "displayName": "Wikilinks for VS Code",
+  "description": "Complete wikilink support with navigation, backlinks, graph visualization, and reference generation",
+  "version": "0.1.0",
+  "publisher": "wikilinks",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "wikilinks",
+    "obsidian",
+    "foam",
+    "markdown",
+    "knowledge-graph",
+    "backlinks"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Wikilinks",
+      "properties": {
+        "wikilinks.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable wikilinks support"
+        },
+        "wikilinks.rootFolder": {
+          "type": "string",
+          "default": "./",
+          "description": "Root folder for link resolution"
+        },
+        "wikilinks.linkResolution": {
+          "type": "string",
+          "enum": [
+            "firstMatch",
+            "mostSpecific",
+            "interactive"
+          ],
+          "default": "mostSpecific",
+          "description": "Strategy for resolving ambiguous links"
+        },
+        "wikilinks.autoGenerateReferences": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto-generate reference definitions on save"
+        },
+        "wikilinks.referenceFormat": {
+          "type": "string",
+          "enum": [
+            "markdown",
+            "inline"
+          ],
+          "default": "markdown",
+          "description": "Format for generated references"
+        },
+        "wikilinks.enableBacklinks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable backlinks panel"
+        },
+        "wikilinks.enableGraph": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable graph visualization"
+        },
+        "wikilinks.excludePatterns": {
+          "type": "array",
+          "default": [
+            "node_modules",
+            ".git",
+            "dist"
+          ],
+          "description": "Glob patterns to exclude from indexing"
+        },
+        "wikilinks.validationSeverity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info",
+            "hint"
+          ],
+          "default": "warning",
+          "description": "Severity level for broken link diagnostics"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "wikilinks.generateReferences",
+        "title": "Wikilinks: Generate Reference Definitions"
+      },
+      {
+        "command": "wikilinks.showBacklinks",
+        "title": "Wikilinks: Show Backlinks Panel"
+      },
+      {
+        "command": "wikilinks.showGraph",
+        "title": "Wikilinks: Show Knowledge Graph"
+      },
+      {
+        "command": "wikilinks.rebuildIndex",
+        "title": "Wikilinks: Rebuild Workspace Index"
+      },
+      {
+        "command": "wikilinks.validateLinks",
+        "title": "Wikilinks: Validate All Links"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "wikilinks.backlinks",
+          "name": "Backlinks",
+          "when": "wikilinks.enabled"
+        }
+      ]
+    },
+    "grammars": [
+      {
+        "scopeName": "markdown.wikilink.injection",
+        "path": "./syntaxes/wikilink.injection.json",
+        "injectTo": [
+          "text.html.markdown"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node18",
+    "watch": "npm run compile -- --watch",
+    "test": "vitest",
+    "lint": "eslint src --ext ts",
+    "format": "prettier --write 'src/**/*.ts'"
+  },
+  "dependencies": {
+    "linkity": "file:../linkity",
+    "minimatch": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@vscode/test-electron": "^2.3.8",
+    "esbuild": "^0.19.11",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
+  }
+}
