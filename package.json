@@ -122,6 +122,22 @@
           "name": "Backlinks",
           "when": "wikilinks.enabled"
         }
+      ],
+      "wikilinks-graph": [
+        {
+          "id": "wikilinks.graphView",
+          "name": "Knowledge Graph",
+          "when": "wikilinks.graphVisible"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "sidebar": [
+        {
+          "id": "wikilinks",
+          "title": "Wikilinks",
+          "icon": "$(symbol-structure)"
+        }
       ]
     },
     "grammars": [

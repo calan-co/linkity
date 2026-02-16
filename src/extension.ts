@@ -4,16 +4,19 @@ import { WorkspaceScanner } from './services/WorkspaceScanner';
 import { FilenameResolver } from './services/FilenameResolver';
 import { BacklinksIndex } from './services/BacklinksIndex';
 import { ReferenceGenerator } from './services/ReferenceGenerator';
+import { GraphBuilder } from './services/GraphBuilder';
 import { WikilinkDocumentLinkProvider } from './providers/LinkProvider';
 import { WikilinkHoverProvider } from './providers/HoverProvider';
 import { WikilinkDefinitionProvider } from './providers/DefinitionProvider';
 import { WikilinkCompletionProvider } from './providers/CompletionProvider';
 import { BacklinksTreeDataProvider } from './providers/BacklinksProvider';
+import { GraphPanel } from './webviews/GraphPanel';
 
 let scanner: WorkspaceScanner;
 let resolver: FilenameResolver;
 let backlinksIndex: BacklinksIndex;
 let referenceGenerator: ReferenceGenerator;
+let graphBuilder: GraphBuilder;
 
 export async function activate(context: vscode.ExtensionContext) {
   console.log('Activating Wikilinks extension...');
@@ -33,6 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
   resolver = new FilenameResolver(scanner, config);
   backlinksIndex = new BacklinksIndex(scanner, resolver);
   referenceGenerator = new ReferenceGenerator(resolver);
+  graphBuilder = new GraphBuilder(backlinksIndex, scanner);
   
   // Scan workspace on activation
   await scanner.scanWorkspace();
@@ -118,6 +122,15 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.commands.executeCommand('wikilinks.backlinks.focus');
     })
   );
+
+  // Register graph visualization command
+  if (config.get<boolean>('enableGraph', true)) {
+    context.subscriptions.push(
+      vscode.commands.registerCommand('wikilinks.showGraph', () => {
+        GraphPanel.createOrShow(context.extensionUri, backlinksIndex, scanner);
+      })
+    );
+  }
   
   // Auto-generate references on save if enabled
   if (config.get<boolean>('autoGenerateReferences', false)) {
