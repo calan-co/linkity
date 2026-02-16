@@ -12,8 +12,6 @@ classification:
 tags: [linkity, api, types]
 ---
 
-# Linkity Types
-
 Core type definitions for Linkity APIs.
 
 ## LinkType

@@ -14,8 +14,6 @@ dependencies:
 notes: []
 ---
 
-# Work Item 10: Publish & Release
-
 ## Goal
 
 Publish linkity to npm and vscode-extension to VS Code marketplace. Create GitHub releases with comprehensive release notes and verify all distribution channels work correctly.

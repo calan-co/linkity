@@ -116,7 +116,7 @@ interface LinkNode {
 ]
 ```
 
-```
+```markdown
 
 ## Examples
 

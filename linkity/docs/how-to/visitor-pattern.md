@@ -12,8 +12,6 @@ classification:
 tags: [linkity, how-to, visitLinks]
 ---
 
-# Process Links with visitLinks
-
 Use `visitLinks` to traverse links and return mapped results.
 
 ## Steps

@@ -349,7 +349,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 ### Performance Targets
 
 | Metric | Target | Measurement |
-|--------|--------|-------------|
+| ------ | ------ | ----------- |
 | Link resolution time | <50ms | 95th percentile |
 | Hover response time | <200ms | 95th percentile |
 | Workspace indexing (1k files) | <1s | Average |
@@ -458,7 +458,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 ## Risk Analysis
 
 | Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
+| ---- | ----------- | ------ | ---------- |
 | Performance degradation on large vaults (10k+ files) | Medium | High | Implement lazy loading, index caching, incremental updates |
 | Linkity parsing misses edge cases | Low | Medium | Comprehensive test suite, contribute fixes upstream |
 | Ambiguous link resolution confuses users | Medium | Medium | Clear UI messaging, resolution hints, documentation |
@@ -471,7 +471,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 ## Competitive Analysis
 
 | Feature | **Our Extension** | Obsidian | Foam | Markdown Links |
-|---------|-------------------|----------|------|----------------|
+| ------- | ----------------- | -------- | ---- | -------------- |
 | Wikilink syntax | ✅ Full | ✅ Full | ✅ Full | ❌ None |
 | Backlinks panel | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
 | Graph visualization | ✅ Yes | ✅ Yes | ⚠️ Basic | ❌ No |
@@ -537,7 +537,7 @@ const links: LinkNode[] = parseWikilink(text);
 ### Effort Reduction
 
 | Task | Without Linkity | With Linkity | Savings |
-|------|-----------------|--------------|---------|
+| ---- | --------------- | ------------ | ------- |
 | Wikilink parsing | 12h | 2h | 10h |
 | Position tracking | 6h | 0h | 6h |
 | Alias handling | 4h | 0h | 4h |
@@ -546,7 +546,3 @@ const links: LinkNode[] = parseWikilink(text);
 | **Total** | **42h** | **8h** | **34h** |
 
 **34 hours saved** = 1 engineer-week = significant cost reduction
-
----
-
-**Document End**

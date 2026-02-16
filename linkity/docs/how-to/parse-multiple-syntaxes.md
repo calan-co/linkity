@@ -12,8 +12,6 @@ classification:
 tags: [linkity, how-to, parsing]
 ---
 
-# Parse Multiple Link Syntaxes
-
 Use `parseLinks` to parse wikilinks, Markdown links, and raw URLs in one pass.
 
 ## Steps

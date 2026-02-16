@@ -12,8 +12,6 @@ classification:
 tags: [linkity, api, parseLinks]
 ---
 
-# parseLinks
-
 Parse text and return an array of `LinkNode` records for all detected links.
 
 ## Signature
@@ -33,7 +31,7 @@ export function parseLinks(
 ## Options
 
 | Option | Type | Default | Description |
-|--------|------|---------|-------------|
+| ------ | ---- | ------- | ----------- |
 | `enableWikilink` | boolean | `true` | Parse Obsidian-style `[[Page]]` links |
 | `enableMarkdown` | boolean | `true` | Parse Markdown `[text](url)` links |
 | `enableUrl` | boolean | `true` | Parse raw URLs like `https://example.com` |

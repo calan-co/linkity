@@ -12,8 +12,6 @@ classification:
 tags: [vscode, linkity, how-to, backlinks]
 ---
 
-# Explore Backlinks
-
 Use the backlinks panel to see incoming and outgoing relationships.
 
 ## Steps

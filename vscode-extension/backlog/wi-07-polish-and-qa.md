@@ -26,8 +26,6 @@ notes:
       PRD markdown formatting updated to address MD022/MD031/MD032/MD040/MD060.
 ---
 
-# Work Item 7: Polish & QA
-
 ## Goal
 
 Fix markdown linting issues in PRD.md, resolve 2 non-functional TODOs in the codebase, and validate that all tests pass with successful builds for both linkity and vscode-extension.

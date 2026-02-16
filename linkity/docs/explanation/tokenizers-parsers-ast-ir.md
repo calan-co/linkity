@@ -57,7 +57,7 @@ The compilation/parsing pipeline consists of several distinct stages, each with 
 ### Core Concepts
 
 | Concept | Primary Purpose | Output | Abstraction Level |
-|---------|----------------|--------|-------------------|
+| ------- | -------------- | ------ | ----------------- |
 | **Tokenizer/Lexer** | Convert raw text into meaningful units | Token stream | Low (character → token) |
 | **Parser** | Build structure from tokens | Parse tree or AST | Medium (tokens → structure) |
 | **AST** | Represent syntactic structure | Tree data structure | High (abstract syntax) |
@@ -410,7 +410,7 @@ flowchart TB
 ### Inverse Operations Table
 
 | Stage | Forward (Analysis) | Reverse (Synthesis) | Roundtrip Requirement |
-|-------|-------------------|---------------------|----------------------|
+| ----- | ----------------- | ------------------- | -------------------- |
 | **Tokenization** | Text → Tokens | Tokens → Text | Token must preserve all source info |
 | **Parsing** | Tokens → AST | AST → Tokens | AST must track original syntax choices |
 | **AST** | AST Construction | AST Traversal + Printing | Full position/whitespace tracking |
@@ -700,7 +700,7 @@ flowchart TB
 ### Current Components
 
 | Component | Type | Location | Role |
-|-----------|------|----------|------|
+| --------- | ---- | -------- | ---- |
 | **Regex-based scanners** | Implicit tokenization | Each parser file | Extract link patterns directly |
 | **Link parsers** | Simple parsers | `src/parsers/*.ts` | Convert text → `LinkNode[]` |
 | **LinkNode** | Lightweight IR | `src/types/index.ts` | Normalized link representation |
@@ -968,7 +968,7 @@ Based on Linkity's goals (zero deps, ESM-first, tree-shakeable), the recommended
 ### Key Takeaways
 
 | Aspect | Current State | Future Direction |
-|--------|---------------|------------------|
+| ------ | ------------- | ---------------- |
 | **Tokenization** | Implicit (regex-based) | May formalize if complexity grows |
 | **Parsing** | Simple, regex-based | Adequate for MVP; stable |
 | **AST** | Not implemented | Consider if transforms needed |

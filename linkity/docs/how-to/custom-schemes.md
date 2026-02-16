@@ -12,8 +12,6 @@ classification:
 tags: [linkity, how-to, custom-schemes]
 ---
 
-# Add Custom URL Schemes
-
 Use `customSchemes` to recognize additional URL schemes (for example `vscode:` or `obsidian:`).
 
 ## Steps

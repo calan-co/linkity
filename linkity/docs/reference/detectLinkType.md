@@ -12,8 +12,6 @@ classification:
 tags: [linkity, api, detectLinkType]
 ---
 
-# detectLinkType
-
 Detect the link type from an input string.
 
 ## Signature

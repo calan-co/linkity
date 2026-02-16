@@ -12,8 +12,6 @@ classification:
 tags: [vscode, linkity, how-to, configuration]
 ---
 
-# Configure Link Resolution
-
 Control how ambiguous wikilinks resolve when multiple files match a single target.
 
 ## Options

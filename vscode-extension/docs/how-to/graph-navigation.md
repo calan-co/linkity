@@ -12,8 +12,6 @@ classification:
 tags: [vscode, linkity, how-to, graph]
 ---
 
-# Navigate the Knowledge Graph
-
 Use the graph view to explore relationships across your workspace.
 
 ## Steps

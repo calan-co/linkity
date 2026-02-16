@@ -114,7 +114,7 @@ Configure in VS Code settings (`settings.json`):
 ### Settings Reference
 
 | Setting | Type | Default | Description |
-|---------|------|---------|-------------|
+| ------- | ---- | ------- | ----------- |
 | `wikilinks.enabled` | boolean | `true` | Enable/disable the extension |
 | `wikilinks.rootFolder` | string | `./` | Root folder for link resolution |
 | `wikilinks.linkResolution` | enum | `mostSpecific` | Strategy for ambiguous links: `firstMatch`, `mostSpecific`, `interactive` |
@@ -129,7 +129,7 @@ Configure in VS Code settings (`settings.json`):
 
 **mostSpecific** (recommended): Choose file with shortest relative path from source
 
-```
+```text
 Source: /notes/work/tasks.md
 Link: [[project]]
 Files: /notes/work/project.md, /notes/personal/project.md
@@ -143,7 +143,7 @@ Result: /notes/work/project.md (closer to source)
 ## Commands
 
 | Command | Description |
-|---------|-------------|
+| ------- | ----------- |
 | `Wikilinks: Generate Reference Definitions` | Convert wikilinks to markdown references |
 | `Wikilinks: Show Backlinks Panel` | Open backlinks sidebar |
 | `Wikilinks: Rebuild Workspace Index` | Force rescan all markdown files |
@@ -171,7 +171,7 @@ Result: /notes/work/project.md (closer to source)
 ## Keyboard Shortcuts
 
 | Shortcut | Action |
-|----------|--------|
+| -------- | ------ |
 | `Ctrl+Click` | Navigate to wikilink target |
 | `F12` | Go to Definition |
 | `Ctrl+Shift+P` → "Wikilinks: ..." | Access commands |
@@ -229,4 +229,4 @@ Built with [linkity](https://github.com/user/linkity) - a zero-dependency wikili
 
 ---
 
-**Made with ❤️ for the knowledge management community**
+Made with ❤️ for the knowledge management community

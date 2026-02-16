@@ -19,8 +19,6 @@ notes:
       for backlinks. Deferred user choice persistence as a future enhancement.
 ---
 
-# Work Item 8: Feature Enhancements
-
 ## Goal
 
 Implement 2 feature enhancements: (1) Interactive file picker for ambiguous wikilinks in FilenameResolver, and (2) Actual line:column position calculation in BacklinksIndex for improved link discovery UX.

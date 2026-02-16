@@ -12,8 +12,6 @@ classification:
 tags: [linkity, api, visitLinks]
 ---
 
-# visitLinks
-
 Traverse an array of `LinkNode` records and optionally return mapped results.
 
 ## Signature

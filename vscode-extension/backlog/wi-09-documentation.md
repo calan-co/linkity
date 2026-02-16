@@ -24,8 +24,6 @@ notes:
       New docs follow frontmatter and fenced-code language requirements.
 ---
 
-# Work Item 9: Documentation
-
 ## Goal
 
 Complete comprehensive documentation for linkity and vscode-extension: API reference, usage guides, and enhanced README examples. Ensure all docs follow YAML frontmatter schema and diataxis classification.

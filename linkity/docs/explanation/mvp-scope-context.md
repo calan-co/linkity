@@ -75,7 +75,7 @@ Then, only if you hit hard constraints (complex transforms, IDE integrations), l
 Inputs: source string + parser options (syntax enum, enablePositions boolean).
 Outputs: Array of
 
-```
+```typescript
 interface LinkInfo {
   raw: string;          // Original matched text
   url: string;          // Resolved/normalized URL
