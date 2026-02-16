@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as vscode from 'vscode';
 import { BacklinksIndex } from '../src/services/BacklinksIndex';
@@ -40,9 +41,8 @@ describe('BacklinksIndex - Position Calculation', () => {
 
   describe('Position from character offset', () => {
     it('calculates line 0, column 0 for offset 0', () => {
-      const text = 'First line\nSecond line';
-      const sourceUri = { fsPath: '/path/file.md', toString: () => '/path/file.md' };
-      const targetUri = { fsPath: '/path/target.md', toString: () => '/path/target.md' };
+      const sourceUri = fakeUri('/path/source.md');
+      const targetUri = fakeUri('/path/target.md');
       
       mockResolver.resolve.mockReturnValue(targetUri);
       mockScanner.getAllFiles.mockReturnValue([sourceUri]);
@@ -154,8 +154,8 @@ Another [[link2]] here`;
 
   describe('Backlink entries with accurate positions', () => {
     it('stores position for each backlink', () => {
-      const sourceUri = { fsPath: '/docs/source.md', toString: () => '/docs/source.md' };
-      const targetUri = { fsPath: '/docs/target.md', toString: () => '/docs/target.md' };
+      const sourceUri = fakeUri('/docs/source.md');
+      const targetUri = fakeUri('/docs/target.md');
       
       // Add three links at different positions
       index.addLink({
@@ -191,8 +191,8 @@ Another [[link2]] here`;
     });
 
     it('preserves all link metadata with position', () => {
-      const sourceUri = { fsPath: '/docs/source.md', toString: () => '/docs/source.md' };
-      const targetUri = { fsPath: '/docs/target.md', toString: () => '/docs/target.md' };
+      const sourceUri = fakeUri('/docs/source.md');
+      const targetUri = fakeUri('/docs/target.md');
       const position = new vscode.Position(2, 8);
       
       const entry = {
@@ -213,3 +213,7 @@ Another [[link2]] here`;
     });
   });
 });
+function fakeUri(path: string): vscode.Uri {
+    return { fsPath: path, toString: () => path, scheme: 'file', authority: '', path: path, query: '', fragment: '' } as any;
+}
+

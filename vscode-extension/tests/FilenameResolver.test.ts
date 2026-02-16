@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as vscode from 'vscode';
 import { FilenameResolver } from '../src/services/FilenameResolver';
@@ -10,7 +11,17 @@ vi.mock('vscode', () => ({
     showQuickPick: vi.fn()
   },
   Uri: {
-    file: (path: string) => ({ fsPath: path, toString: () => path })
+    file: (path: string) => ({ 
+      scheme: 'file',
+      authority: '',
+      path: path,
+      query: '',
+      fragment: '',
+      fsPath: path,
+      toString: () => path,
+      with: vi.fn(),
+      toJSON: vi.fn()
+    })
   },
   Position: class {
     constructor(readonly line: number, readonly character: number) {}
@@ -72,7 +83,17 @@ describe('FilenameResolver', () => {
         { fsPath: '/path/a/note.md', toString: () => '/path/a/note.md' },
         { fsPath: '/path/note.md', toString: () => '/path/note.md' }
       ];
-      const sourceUri = { fsPath: '/path/source.md', toString: () => '/path/source.md' };
+      const sourceUri = { 
+        scheme: 'file',
+        authority: '',
+        path: '/path/source.md',
+        query: '',
+        fragment: '',
+        fsPath: '/path/source.md', 
+        toString: () => '/path/source.md',
+        with: vi.fn(),
+        toJSON: vi.fn()
+      };
       mockScanner.getFilesMatching.mockReturnValue(files);
       
       const result = resolver.resolve('note', { 
@@ -147,7 +168,17 @@ describe('FilenameResolver', () => {
         { fsPath: '/a/note.md', toString: () => '/a/note.md' },
         { fsPath: '/note.md', toString: () => '/note.md' }
       ];
-      const sourceUri = { fsPath: '/source.md', toString: () => '/source.md' };
+      const sourceUri = { 
+        scheme: 'file',
+        authority: '',
+        path: '/source.md',
+        query: '',
+        fragment: '',
+        fsPath: '/source.md', 
+        toString: () => '/source.md',
+        with: vi.fn(),
+        toJSON: vi.fn()
+      };
       
       mockScanner.getFilesMatching.mockReturnValue(files);
       
