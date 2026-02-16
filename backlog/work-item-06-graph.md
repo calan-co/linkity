@@ -1,8 +1,9 @@
 ---
-status: not_started
+status: in_progress
 priority: p2
 estimated_hours: 16
 actual_hours: 0
+start_date: 2026-02-16
 dependencies: [work-item-04-backlinks]
 tags: [visualization, graph, webview]
 created_date: 2026-02-16

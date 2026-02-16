@@ -1,7 +1,7 @@
 {
-  "name": "vscode-wikilinks",
-  "displayName": "Wikilinks for VS Code",
-  "description": "Complete wikilink support with navigation, backlinks, graph visualization, and reference generation",
+  "name": "vscode-linkity",
+  "displayName": "Linkity for VS Code",
+  "description": "Complete wikilink support powered by linkity - navigation, backlinks, graph visualization, and reference generation",
   "version": "0.1.0",
   "publisher": "wikilinks",
   "engines": {
@@ -138,7 +138,8 @@
     "vscode:prepublish": "npm run compile",
     "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --target=node18",
     "watch": "npm run compile -- --watch",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint src --ext ts",
     "format": "prettier --write 'src/**/*.ts'"
   },
