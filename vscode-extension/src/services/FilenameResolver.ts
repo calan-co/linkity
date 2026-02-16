@@ -15,7 +15,73 @@ export class FilenameResolver {
   ) {}
   
   /**
-   * Resolve a wikilink target to an absolute file URI
+   * Resolve a wikilink target to an absolute file URI (async version with interactive picker support)
+   */
+  async resolveAsync(target: string, options: ResolveOptions = {}): Promise<vscode.Uri | null> {
+    // Remove .md extension if present for consistent matching
+    const basename = target.endsWith('.md') ? target.slice(0, -3) : target;
+    
+    const matches = this.scanner.getFilesMatching(basename);
+    
+    if (matches.length === 0) {
+      return null;
+    }
+    
+    if (matches.length === 1) {
+      return matches[0];
+    }
+    
+    // Multiple matches - use resolution strategy
+    const strategy = options.strategy || this.config.getLinkResolution();
+    
+    switch (strategy) {
+      case 'firstMatch':
+        return matches[0];
+      
+      case 'mostSpecific':
+        return this.resolveMostSpecific(matches, options.sourceFileUri);
+      
+      case 'interactive':
+        // Show interactive picker for ambiguous matches
+        return await this.showInteractivePicker(matches, options.sourceFileUri);
+      
+      default:
+        return matches[0];
+    }
+  }
+  
+  /**
+   * Show an interactive picker for ambiguous wikilink targets
+   */
+  private async showInteractivePicker(
+    matches: vscode.Uri[],
+    sourceUri?: vscode.Uri
+  ): Promise<vscode.Uri | null> {
+    // Create quick pick items with display labels and descriptions
+    const items = matches.map(uri => {
+      const relativePath = sourceUri 
+        ? path.relative(path.dirname(sourceUri.fsPath), uri.fsPath)
+        : uri.fsPath;
+      
+      return {
+        label: path.basename(uri.fsPath),
+        description: relativePath,
+        uri
+      };
+    });
+    
+    // Show quick pick dialog
+    const selected = await vscode.window.showQuickPick(items, {
+      title: `Multiple files found for wikilink`,
+      placeHolder: 'Select the target file',
+      matchOnDescription: true
+    });
+    
+    return selected?.uri || null;
+  }
+  
+  /**
+   * Resolve a wikilink target to an absolute file URI (sync version - falls back to mostSpecific for ambiguous)
    */
   resolve(target: string, options: ResolveOptions = {}): vscode.Uri | null {
     // Remove .md extension if present for consistent matching
@@ -93,6 +159,18 @@ export class FilenameResolver {
     anchor?: string;
   } {
     const uri = this.resolve(target, options);
+    return { uri, anchor };
+  }
+
+  /**
+   * Resolve with anchor support (async version with interactive picker)
+   */
+  async resolveWithAnchorAsync(
+    target: string,
+    anchor: string | undefined,
+    options: ResolveOptions = {}
+  ): Promise<{ uri: vscode.Uri | null; anchor?: string }> {
+    const uri = await this.resolveAsync(target, options);
     return { uri, anchor };
   }
   

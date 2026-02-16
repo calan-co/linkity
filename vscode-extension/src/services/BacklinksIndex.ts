@@ -51,15 +51,15 @@ export class BacklinksIndex {
         });
         
         if (targetUri) {
+          // Calculate actual Position from character offset
+          const position = this.getPositionFromOffset(text, link.start);
+          
           const entry: BacklinkEntry = {
             sourceUri,
             targetUri,
             linkText: link.alias || link.value,
             anchor: link.anchor,
-            position: new vscode.Position(0, 0) // Placeholder: currently uses file start
-            // TODO: Calculate actual line:column from LinkNode.position (character offsets)
-            // Enhancement: Parse source file to map character offset -> (line, column)
-            // See: work-item-08-feature-enhancements.md for implementation
+            position
           };
           
           this.addLink(entry);
@@ -68,6 +68,25 @@ export class BacklinksIndex {
     } catch (error) {
       console.error(`Error indexing file ${sourceUri.fsPath}:`, error);
     }
+  }
+  
+  /**
+   * Convert character offset to vscode.Position (line, column)
+   */
+  private getPositionFromOffset(text: string, offset: number): vscode.Position {
+    let line = 0;
+    let column = 0;
+    
+    for (let i = 0; i < offset && i < text.length; i++) {
+      if (text[i] === '\n') {
+        line++;
+        column = 0;
+      } else {
+        column++;
+      }
+    }
+    
+    return new vscode.Position(line, column);
   }
   
   addLink(entry: BacklinkEntry): void {

@@ -31,9 +31,11 @@ export class WikilinkDocumentLinkProvider implements vscode.DocumentLinkProvider
         continue;
       }
       
+      const strategy = this.config.getLinkResolution();
+      const resolvedStrategy = strategy === 'interactive' ? 'mostSpecific' : strategy;
       const uri = this.resolver.resolve(link.value, {
         sourceFileUri: document.uri,
-        strategy: this.config.getLinkResolution()
+        strategy: resolvedStrategy
       });
       
       if (uri) {

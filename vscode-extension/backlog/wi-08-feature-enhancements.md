@@ -1,17 +1,22 @@
 ---
 title: "Phase 2: Feature Enhancements - Interactive file picker & position tracking"
 id: 8
-status: not_started
+status: completed
 priority: medium
 complexity: medium
 estimated_hours: 12
-actual_hours: null
-completed_date: null
-related_commits: []
-test_results: null
+actual_hours: 4
+completed_date: 2026-02-16
+related_commits:
+  - "feat: add interactive wikilink resolution and accurate backlink positions"
+test_results: "29/29 tests passing (extension)"
 dependencies:
-  - "[[7-polish-and-qa.md]]"
-notes: []
+  - "[[wi-07-polish-and-qa.md]]"
+notes:
+  - timestamp: 2026-02-16T12:45:00Z
+    note: |
+      Implemented interactive picker for ambiguous links and accurate position mapping
+      for backlinks. Deferred user choice persistence as a future enhancement.
 ---
 
 # Work Item 8: Feature Enhancements
@@ -33,21 +38,21 @@ These enhancements improve user experience without breaking existing functionali
 
 ### Interactive File Picker
 
-- [ ] Read FilenameResolver.ts to understand current resolution logic
-- [ ] Implement `window.showQuickPick()` UI for ambiguous matches
+- [x] Read FilenameResolver.ts to understand current resolution logic
+- [x] Implement `window.showQuickPick()` UI for ambiguous matches
 - [ ] Add user choice persistence (remember user preference?)
-- [ ] Add tests for ambiguous/unambiguous scenarios
-- [ ] Test with files having similar names in different folders
-- [ ] Verify resolution strategies still work as fallback
+- [x] Add tests for ambiguous/unambiguous scenarios
+- [x] Test with files having similar names in different folders
+- [x] Verify resolution strategies still work as fallback
 
 ### Position Calculation in BacklinksIndex
 
-- [ ] Read BacklinksIndex.ts and understand LinkNode structure
-- [ ] Parse LinkNode.position (start, end offsets) into file context
-- [ ] Calculate line:column from character offsets using file line breaks
-- [ ] Update BacklinkEntry position from Position(0, 0) to actual position
-- [ ] Add unit tests for position accuracy across different files
-- [ ] Test with links at various line:column positions (beginning, middle, end of file)
+- [x] Read BacklinksIndex.ts and understand LinkNode structure
+- [x] Parse LinkNode.position (start, end offsets) into file context
+- [x] Calculate line:column from character offsets using file line breaks
+- [x] Update BacklinkEntry position from Position(0, 0) to actual position
+- [x] Add unit tests for position accuracy across different files
+- [x] Test with links at various line:column positions (beginning, middle, end of file)
 
 ## Deliverables
 
