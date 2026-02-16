@@ -3,7 +3,7 @@
   "displayName": "Linkity for VS Code",
   "description": "Complete wikilink support powered by linkity - navigation, backlinks, graph visualization, and reference generation",
   "version": "0.1.0",
-  "publisher": "wikilinks",
+  "publisher": "linkity",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -25,19 +25,19 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Wikilinks",
+      "title": "Linkity",
       "properties": {
-        "wikilinks.enabled": {
+        "linkity.enabled": {
           "type": "boolean",
           "default": true,
           "description": "Enable wikilinks support"
         },
-        "wikilinks.rootFolder": {
+        "linkity.rootFolder": {
           "type": "string",
           "default": "./",
           "description": "Root folder for link resolution"
         },
-        "wikilinks.linkResolution": {
+        "linkity.linkResolution": {
           "type": "string",
           "enum": [
             "firstMatch",
@@ -47,12 +47,12 @@
           "default": "mostSpecific",
           "description": "Strategy for resolving ambiguous links"
         },
-        "wikilinks.autoGenerateReferences": {
+        "linkity.autoGenerateReferences": {
           "type": "boolean",
           "default": false,
           "description": "Auto-generate reference definitions on save"
         },
-        "wikilinks.referenceFormat": {
+        "linkity.referenceFormat": {
           "type": "string",
           "enum": [
             "markdown",
@@ -61,17 +61,17 @@
           "default": "markdown",
           "description": "Format for generated references"
         },
-        "wikilinks.enableBacklinks": {
+        "linkity.enableBacklinks": {
           "type": "boolean",
           "default": true,
           "description": "Enable backlinks panel"
         },
-        "wikilinks.enableGraph": {
+        "linkity.enableGraph": {
           "type": "boolean",
           "default": true,
           "description": "Enable graph visualization"
         },
-        "wikilinks.excludePatterns": {
+        "linkity.excludePatterns": {
           "type": "array",
           "default": [
             "node_modules",
@@ -80,7 +80,7 @@
           ],
           "description": "Glob patterns to exclude from indexing"
         },
-        "wikilinks.validationSeverity": {
+        "linkity.validationSeverity": {
           "type": "string",
           "enum": [
             "error",
@@ -95,47 +95,47 @@
     },
     "commands": [
       {
-        "command": "wikilinks.generateReferences",
-        "title": "Wikilinks: Generate Reference Definitions"
+        "command": "linkity.generateReferences",
+        "title": "Linkity: Generate Reference Definitions"
       },
       {
-        "command": "wikilinks.showBacklinks",
-        "title": "Wikilinks: Show Backlinks Panel"
+        "command": "linkity.showBacklinks",
+        "title": "Linkity: Show Backlinks Panel"
       },
       {
-        "command": "wikilinks.showGraph",
-        "title": "Wikilinks: Show Knowledge Graph"
+        "command": "linkity.showGraph",
+        "title": "Linkity: Show Knowledge Graph"
       },
       {
-        "command": "wikilinks.rebuildIndex",
-        "title": "Wikilinks: Rebuild Workspace Index"
+        "command": "linkity.rebuildIndex",
+        "title": "Linkity: Rebuild Workspace Index"
       },
       {
-        "command": "wikilinks.validateLinks",
-        "title": "Wikilinks: Validate All Links"
+        "command": "linkity.validateLinks",
+        "title": "Linkity: Validate All Links"
       }
     ],
     "views": {
       "explorer": [
         {
-          "id": "wikilinks.backlinks",
+          "id": "linkity.backlinks",
           "name": "Backlinks",
-          "when": "wikilinks.enabled"
+          "when": "linkity.enabled"
         }
       ],
       "wikilinks-graph": [
         {
-          "id": "wikilinks.graphView",
+          "id": "linkity.graphView",
           "name": "Knowledge Graph",
-          "when": "wikilinks.graphVisible"
+          "when": "linkity.graphVisible"
         }
       ]
     },
     "viewsContainers": {
       "sidebar": [
         {
-          "id": "wikilinks",
-          "title": "Wikilinks",
+          "id": "linkity",
+          "title": "Linkity",
           "icon": "$(symbol-structure)"
         }
       ]

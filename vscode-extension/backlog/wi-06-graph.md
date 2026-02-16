@@ -82,7 +82,7 @@ const simulation = d3.forceSimulation(nodes)
 ## Deliverables
 
 1. GraphPanel webview with D3.js visualization
-2. Command: "Wikilinks: Show Knowledge Graph"
+2. Command: "Linkity: Show Knowledge Graph"
 3. Interactive controls (zoom, pan, filter)
 4. Performance optimization for 1k+ nodes
 5. Export graph as SVG/PNG

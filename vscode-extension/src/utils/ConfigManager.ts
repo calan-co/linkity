@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export class ConfigManager {
-  private readonly configSection = 'wikilinks';
+  private readonly configSection = 'linkity';
   
   get<T>(key: string, defaultValue: T): T {
     return vscode.workspace.getConfiguration(this.configSection).get<T>(key, defaultValue);

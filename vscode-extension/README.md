@@ -47,13 +47,13 @@ Complete [[wikilink]] support for VS Code—powered by linkity. Features navigat
 
 1. Open VS Code
 2. Go to Extensions (Ctrl+Shift+X)
-3. Search for "Wikilinks"
+3. Search for "Linkity"
 4. Click Install
 
 Or install from VSIX:
 
 ```bash
-code --install-extension vscode-wikilinks-0.1.0.vsix
+code --install-extension vscode-linkity-0.1.0.vsix
 ```
 
 ## Usage
@@ -85,16 +85,16 @@ Jump to [[Project Notes#Todo Section]]
 For GitHub compatibility, convert wikilinks to standard markdown references:
 
 1. Open command palette (Ctrl+Shift+P)
-2. Run "Wikilinks: Generate Reference Definitions"
+2. Run "Linkity: Generate Reference Definitions"
 
 Result:
 
 ```markdown
 Check out [[My Note|the docs]].
 
-<!-- wikilinks:references-start -->
+<!-- linkity:references-start -->
 [the docs]: path/to/My%20Note.md
-<!-- wikilinks:references-end -->
+<!-- linkity:references-end -->
 ```
 
 ## Configuration
@@ -103,11 +103,11 @@ Configure in VS Code settings (`settings.json`):
 
 ```json
 {
-  "wikilinks.enabled": true,
-  "wikilinks.linkResolution": "mostSpecific",
-  "wikilinks.autoGenerateReferences": false,
-  "wikilinks.enableBacklinks": true,
-  "wikilinks.excludePatterns": ["node_modules", ".git", "dist"]
+  "linkity.enabled": true,
+  "linkity.linkResolution": "mostSpecific",
+  "linkity.autoGenerateReferences": false,
+  "linkity.enableBacklinks": true,
+  "linkity.excludePatterns": ["node_modules", ".git", "dist"]
 }
 ```
 
@@ -115,15 +115,15 @@ Configure in VS Code settings (`settings.json`):
 
 | Setting | Type | Default | Description |
 | ------- | ---- | ------- | ----------- |
-| `wikilinks.enabled` | boolean | `true` | Enable/disable the extension |
-| `wikilinks.rootFolder` | string | `./` | Root folder for link resolution |
-| `wikilinks.linkResolution` | enum | `mostSpecific` | Strategy for ambiguous links: `firstMatch`, `mostSpecific`, `interactive` |
-| `wikilinks.autoGenerateReferences` | boolean | `false` | Auto-generate references on save |
-| `wikilinks.referenceFormat` | enum | `markdown` | Reference format: `markdown`, `inline` |
-| `wikilinks.enableBacklinks` | boolean | `true` | Show backlinks panel |
-| `wikilinks.enableGraph` | boolean | `true` | Enable graph visualization |
-| `wikilinks.excludePatterns` | array | `["node_modules", ".git", "dist"]` | Glob patterns to exclude |
-| `wikilinks.validationSeverity` | enum | `warning` | Diagnostic severity: `error`, `warning`, `info`, `hint` |
+| `linkity.enabled` | boolean | `true` | Enable/disable the extension |
+| `linkity.rootFolder` | string | `./` | Root folder for link resolution |
+| `linkity.linkResolution` | enum | `mostSpecific` | Strategy for ambiguous links: `firstMatch`, `mostSpecific`, `interactive` |
+| `linkity.autoGenerateReferences` | boolean | `false` | Auto-generate references on save |
+| `linkity.referenceFormat` | enum | `markdown` | Reference format: `markdown`, `inline` |
+| `linkity.enableBacklinks` | boolean | `true` | Show backlinks panel |
+| `linkity.enableGraph` | boolean | `true` | Enable graph visualization |
+| `linkity.excludePatterns` | array | `["node_modules", ".git", "dist"]` | Glob patterns to exclude |
+| `linkity.validationSeverity` | enum | `warning` | Diagnostic severity: `error`, `warning`, `info`, `hint` |
 
 ### Resolution Strategies
 
@@ -144,16 +144,16 @@ Result: /notes/work/project.md (closer to source)
 
 | Command | Description |
 | ------- | ----------- |
-| `Wikilinks: Generate Reference Definitions` | Convert wikilinks to markdown references |
-| `Wikilinks: Show Backlinks Panel` | Open backlinks sidebar |
-| `Wikilinks: Rebuild Workspace Index` | Force rescan all markdown files |
-| `Wikilinks: Validate All Links` | Check for broken wikilinks (coming soon) |
+| `Linkity: Generate Reference Definitions` | Convert wikilinks to markdown references |
+| `Linkity: Show Backlinks Panel` | Open backlinks sidebar |
+| `Linkity: Rebuild Workspace Index` | Force rescan all markdown files |
+| `Linkity: Validate All Links` | Check for broken wikilinks (coming soon) |
 
 ## Ecosystem Compatibility
 
 ### Obsidian
 
-✅ Wikilinks, aliases, anchors  
+✅ Linkity, aliases, anchors  
 ✅ Block references  
 ⚠️ Embeds (coming soon)
 
@@ -174,7 +174,7 @@ Result: /notes/work/project.md (closer to source)
 | -------- | ------ |
 | `Ctrl+Click` | Navigate to wikilink target |
 | `F12` | Go to Definition |
-| `Ctrl+Shift+P` → "Wikilinks: ..." | Access commands |
+| `Ctrl+Shift+P` → "Linkity: ..." | Access commands |
 
 ## Performance
 
@@ -189,8 +189,8 @@ Benchmarks on MacBook Pro M1:
 
 ### Links not working
 
-1. Run "Wikilinks: Rebuild Workspace Index"
-2. Check `wikilinks.enabled` is `true`
+1. Run "Linkity: Rebuild Workspace Index"
+2. Check `linkity.enabled` is `true`
 3. Ensure file exists and isn't in exclude patterns
 
 ### Ambiguous links resolved incorrectly
@@ -201,7 +201,7 @@ Benchmarks on MacBook Pro M1:
 
 ### References not generating
 
-- Check `wikilinks.autoGenerateReferences` setting
+- Check `linkity.autoGenerateReferences` setting
 - Manually run "Generate Reference Definitions" command
 
 ## Contributing

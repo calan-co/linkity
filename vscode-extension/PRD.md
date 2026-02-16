@@ -1,4 +1,4 @@
-# Product Requirements Document: VS Code Wikilinks Extension
+# Product Requirements Document: VS Code Linkity Extension
 
 **Version**: 1.0  
 **Date**: February 16, 2026  
@@ -291,49 +291,49 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 
 ```json
 {
-  "wikilinks.enabled": {
+  "linkity.enabled": {
     "type": "boolean",
     "default": true,
     "description": "Enable wikilinks support"
   },
-  "wikilinks.rootFolder": {
+  "linkity.rootFolder": {
     "type": "string",
     "default": "./",
     "description": "Root folder for link resolution"
   },
-  "wikilinks.linkResolution": {
+  "linkity.linkResolution": {
     "type": "string",
     "enum": ["firstMatch", "mostSpecific", "interactive"],
     "default": "mostSpecific",
     "description": "Strategy for resolving ambiguous links"
   },
-  "wikilinks.autoGenerateReferences": {
+  "linkity.autoGenerateReferences": {
     "type": "boolean",
     "default": false,
     "description": "Auto-generate reference definitions on save"
   },
-  "wikilinks.referenceFormat": {
+  "linkity.referenceFormat": {
     "type": "string",
     "enum": ["markdown", "inline"],
     "default": "markdown",
     "description": "Format for generated references"
   },
-  "wikilinks.enableBacklinks": {
+  "linkity.enableBacklinks": {
     "type": "boolean",
     "default": true,
     "description": "Enable backlinks panel"
   },
-  "wikilinks.enableGraph": {
+  "linkity.enableGraph": {
     "type": "boolean",
     "default": true,
     "description": "Enable graph visualization"
   },
-  "wikilinks.excludePatterns": {
+  "linkity.excludePatterns": {
     "type": "array",
     "default": ["node_modules", ".git", "dist"],
     "description": "Glob patterns to exclude from indexing"
   },
-  "wikilinks.validationSeverity": {
+  "linkity.validationSeverity": {
     "type": "string",
     "enum": ["error", "warning", "info", "hint"],
     "default": "warning",
@@ -393,7 +393,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 7. **Collaboration**: No real-time multi-user editing
 8. **Plugin system**: No third-party plugin API (at least for MVP)
 9. **AI features**: No ChatGPT/AI-powered suggestions (future consideration)
-10. **Custom link types**: Only standard wikilinks (no custom syntax like `<<link>>`)
+10. **Custom link types**: Only standard linkity (no custom syntax like `<<link>>`)
 
 ### Future Considerations (Roadmap)
 
@@ -501,7 +501,7 @@ provideCompletionItems(document: TextDocument, position: Position): CompletionIt
 - **Ambiguous link**: Wikilink matching multiple files (e.g., two `note.md` files)
 - **Anchor**: Section reference in wikilink: `[[file#heading]]`
 - **Block ID**: Obsidian-style block reference: `[[file#^blockid]]`
-- **Linkity**: Zero-dependency TypeScript library for parsing wikilinks
+- **Linkity**: Zero-dependency TypeScript library for parsing linkity
 - **Resolution strategy**: Algorithm for choosing which file when ambiguous links exist
 
 ---

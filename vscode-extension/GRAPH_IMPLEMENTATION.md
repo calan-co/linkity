@@ -20,7 +20,7 @@ Interactive webview component that:
 
 **Key Features:**
 
-- Command: `Wikilinks: Show Knowledge Graph`
+- Command: `Linkity: Show Knowledge Graph`
 - Returns graph panel on reopen (singleton pattern)
 - Auto-refresh via message system
 - Responsive design with CSS variables for VS Code theming
@@ -73,7 +73,7 @@ All passing (12/12 total tests):
 Updated `src/extension.ts`:
 
 - Registered graph builder initialization
-- Added `wikilinks.showGraph` command
+- Added `linkity.showGraph` command
 - Integrated GraphPanel creation on command activation
 
 Updated `package.json`:
@@ -86,7 +86,7 @@ Updated `package.json`:
 ## Performance Metrics
 
 | Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
+| ------ | ------ | ------ | ------ |
 | Bundle Size | - | 92.6 KB | ✅ Good (includes D3.js) |
 | Compilation Time | <100ms | 11ms | ✅ Excellent |
 | Rendering 1,000 nodes | <2s | <1.5s | ✅ Exceeds target |
@@ -145,8 +145,8 @@ Updated `package.json`:
 ## Acceptance Criteria - All Met ✅
 
 | Criterion | Status | Notes |
-|-----------|--------|-------|
-| Opens graph panel with command | ✅ | `wikilinks.showGraph` command verified |
+| --------- | ------ | ----- |
+| Opens graph panel with command | ✅ | `linkity.showGraph` command verified |
 | Shows all files as nodes, wikilinks as edges | ✅ | GraphBuilder converts all files + links |
 | Double-click node opens file in editor | ✅ | D3 click handler calls `vscode.open` |
 | Zoom/pan works smoothly | ✅ | D3.js zoom behavior implemented |
@@ -205,7 +205,7 @@ This work includes 2 new commits:
 **All 6 Work Items Complete** ✅
 
 | Item | Feature | Status | Actual Hours |
-|------|---------|--------|--------------|
+| ---- | ------- | ------ | ------------ |
 | WI-01 | Bootstrap & Linkity | ✅ | 6h |
 | WI-02 | Workspace & Resolution | ✅ | 8h |
 | WI-03 | Language Providers | ✅ | 10h |
@@ -223,7 +223,7 @@ This work includes 2 new commits:
 
 **Git History** (last 12 commits):
 
-```
+```text
 b32432a (HEAD -> main) docs: mark work-item-06-graph as completed
 6048bac feat: implement knowledge graph visualization with D3.js
 fdc31ed chore: rename project to vscode-linkity and finalize work items 1-5

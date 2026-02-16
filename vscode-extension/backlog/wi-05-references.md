@@ -29,7 +29,7 @@ Implement reference link generation to convert wikilinks into standard markdown 
 - [ ] Add "Generate References" command
 - [ ] Implement auto-generation on save (configurable)
   - [ ] Hook onDidSaveTextDocument event
-  - [ ] Check config: `wikilinks.autoGenerateReferences`
+  - [ ] Check config: `linkity.autoGenerateReferences`
   - [ ] Generate references if enabled
   - [ ] Show notification on first auto-generation
 - [ ] Add reference format options (markdown, inline)
@@ -44,10 +44,10 @@ Input:
 Check out [[Project Notes|the project]] and [[Meeting Notes]].
 
 Output (appended):
-<!-- wikilinks:references-start -->
+<!-- linkity:references-start -->
 [the project]: /path/to/Project%20Notes.md
 [Meeting Notes]: /path/to/Meeting%20Notes.md
-<!-- wikilinks:references-end -->
+<!-- linkity:references-end -->
 ```
 
 ### ReferenceGenerator API
@@ -64,7 +64,7 @@ export class ReferenceGenerator {
 ## Deliverables
 
 1. ReferenceGenerator service with idempotent generation
-2. Manual command: "Wikilinks: Generate References"
+2. Manual command: "Linkity: Generate References"
 3. Auto-generation on save (configurable, OFF by default)
 4. Preservation of manual edits
 5. Tests for edge cases

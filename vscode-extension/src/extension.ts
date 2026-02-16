@@ -19,7 +19,7 @@ let referenceGenerator: ReferenceGenerator;
 let graphBuilder: GraphBuilder;
 
 export async function activate(context: vscode.ExtensionContext) {
-  console.log('Activating Wikilinks extension...');
+  console.log('Activating Linkity extension...');
   
   const startTime = Date.now();
   
@@ -27,7 +27,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const config = new ConfigManager();
   
   if (!config.isEnabled()) {
-    console.log('Wikilinks extension is disabled in settings');
+    console.log('Linkity extension is disabled in settings');
     return;
   }
   
@@ -77,7 +77,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // Register backlinks tree view
   if (config.get<boolean>('enableBacklinks', true)) {
     const backlinksProvider = new BacklinksTreeDataProvider(backlinksIndex);
-    const treeView = vscode.window.createTreeView('wikilinks.backlinks', {
+    const treeView = vscode.window.createTreeView('linkity.backlinks', {
       treeDataProvider: backlinksProvider
     });
     context.subscriptions.push(treeView);
@@ -92,7 +92,7 @@ export async function activate(context: vscode.ExtensionContext) {
   
   // Register commands
   context.subscriptions.push(
-    vscode.commands.registerCommand('wikilinks.generateReferences', async () => {
+    vscode.commands.registerCommand('linkity.generateReferences', async () => {
       const editor = vscode.window.activeTextEditor;
       if (editor && editor.document.languageId === 'markdown') {
         await referenceGenerator.generateForDocument(editor.document);
@@ -101,7 +101,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
   
   context.subscriptions.push(
-    vscode.commands.registerCommand('wikilinks.rebuildIndex', async () => {
+    vscode.commands.registerCommand('linkity.rebuildIndex', async () => {
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
@@ -113,20 +113,20 @@ export async function activate(context: vscode.ExtensionContext) {
           await backlinksIndex.buildIndex();
         }
       );
-      vscode.window.showInformationMessage('Wikilinks index rebuilt successfully');
+      vscode.window.showInformationMessage('Linkity index rebuilt successfully');
     })
   );
   
   context.subscriptions.push(
-    vscode.commands.registerCommand('wikilinks.showBacklinks', () => {
-      vscode.commands.executeCommand('wikilinks.backlinks.focus');
+    vscode.commands.registerCommand('linkity.showBacklinks', () => {
+      vscode.commands.executeCommand('linkity.backlinks.focus');
     })
   );
 
   // Register graph visualization command
   if (config.get<boolean>('enableGraph', true)) {
     context.subscriptions.push(
-      vscode.commands.registerCommand('wikilinks.showGraph', () => {
+      vscode.commands.registerCommand('linkity.showGraph', () => {
         GraphPanel.createOrShow(context.extensionUri, backlinksIndex, scanner);
       })
     );
@@ -144,14 +144,14 @@ export async function activate(context: vscode.ExtensionContext) {
   }
   
   const activationTime = Date.now() - startTime;
-  console.log(`Wikilinks extension activated in ${activationTime}ms`);
+  console.log(`Linkity extension activated in ${activationTime}ms`);
   
   // Show activation message (optional, can be disabled)
   if (config.get<boolean>('showActivationMessage', false)) {
-    vscode.window.showInformationMessage('Wikilinks extension activated');
+    vscode.window.showInformationMessage('Linkity extension activated');
   }
 }
 
 export function deactivate() {
-  console.log('Deactivating Wikilinks extension');
+  console.log('Deactivating Linkity extension');
 }

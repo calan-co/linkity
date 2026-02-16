@@ -24,4 +24,4 @@ Use the graph view to explore relationships across your workspace.
 ## Tips
 
 - Large workspaces render faster after a full index rebuild.
-- Use `wikilinks.excludePatterns` to remove noisy directories from the graph.
+- Use `linkity.excludePatterns` to remove noisy directories from the graph.

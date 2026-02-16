@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { FilenameResolver } from './FilenameResolver';
 import { LinkityAdapter } from '../core/LinkityAdapter';
 
-const REFERENCE_MARKER_START = '<!-- wikilinks:references-start -->';
-const REFERENCE_MARKER_END = '<!-- wikilinks:references-end -->';
+const REFERENCE_MARKER_START = '<!-- linkity:references-start -->';
+const REFERENCE_MARKER_END = '<!-- linkity:references-end -->';
 
 export class ReferenceGenerator {
   private adapter = new LinkityAdapter();

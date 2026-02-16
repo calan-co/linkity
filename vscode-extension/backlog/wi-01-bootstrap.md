@@ -39,7 +39,7 @@ The extension needs a solid foundation with proper TypeScript configuration, VS 
 ### File Structure
 
 ```ascii-tree
-vscode-wikilinks/
+vscode-extension/
 ├── package.json          (manifest + dependencies)
 ├── tsconfig.json         (TypeScript config)
 ├── src/
@@ -68,7 +68,7 @@ export class LinkityAdapter {
 1. Working VS Code extension skeleton that activates on markdown files
 2. Linkity integrated and accessible via LinkityAdapter
 3. Build pipeline (esbuild) configured
-4. Extension shows "Wikilinks extension activated" message on load
+4. Extension shows "Linkity extension activated" message on load
 
 ## Acceptance Criteria
 

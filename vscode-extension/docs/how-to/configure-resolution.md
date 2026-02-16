@@ -26,7 +26,7 @@ Add this to your VS Code settings:
 
 ```json
 {
-  "wikilinks.linkResolution": "interactive"
+  "linkity.linkResolution": "interactive"
 }
 ```
 
