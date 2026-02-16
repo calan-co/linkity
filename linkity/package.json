@@ -1,0 +1,73 @@
+{
+  "name": "linkity",
+  "version": "0.1.0",
+  "description": "Linkity: Unified link format AST library for Node.js and browsers (ESM-first)",
+  "type": "module",
+  "license": "MIT",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/linkity"
+  },
+  "homepage": "https://github.com/your-org/linkity#readme",
+  "bugs": {
+    "url": "https://github.com/your-org/linkity/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/index.browser.mjs",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup --clean",
+    "dev": "tsup --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build && npm run test",
+    "lint:code": "eslint .",
+    "lint:md": "markdownlint --ignore node_modules .",
+    "docs:validate": "doc-vader validate",
+    "docs:validate:relaxed": "npm run docs:validate -- --no-strict",
+    "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate",
+    "postinstall": "$(npm bin)/jsonschema-tools install-git-hook"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
+    "@wikimedia/jsonschema-tools": "latest",
+    "ajv": "^8.17.1",
+    "doc-vader": "file:../doc-vader",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "markdownlint-cli": "^0.41.0",
+    "memfs": "^4.50.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.8"
+  },
+  "dependencies": {
+    "detect-newline": "^4.0.1"
+  }
+}

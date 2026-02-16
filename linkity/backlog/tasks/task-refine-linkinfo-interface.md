@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=../schemas/work-item.frontmatter.schema.json
+id: wi-003a
+title: Refine LinkInfo/LinkNode Interface
+type: work-item
+subtype: feature
+lifecycle: active
+status: complete
+priority: medium
+classification:
+  diataxis: how-to
+  sensitivity: internal
+tags: [types, api, linkity]
+---
+
+**Estimated Effort:** 1 hour  
+**Priority:** Medium (future extensibility)  
+**Assignee:** TBD  
+**Depends On:** None
+
+## Overview
+
+Design and document a refined `LinkInfo` (or `LinkNode`) TypeScript interface to support richer link metadata and future extensibility. Ensure the interface is consistent with project conventions and ESM-first design.
+
+## Context
+
+- Interface should support optional context fields (e.g., inCode, inHeading, headingLevel, inline)
+- Should be compatible with current and future parser outputs
+
+## Checklist
+
+- [x] Draft a refined `LinkInfo`/`LinkNode` TypeScript interface in `src/types/index.ts`
+- [x] Document usage examples and rationale in code comments
+
+## Success Criteria
+
+✅ Interface supports current and future metadata needs  
+✅ Changes are documented and ready for review
+
+## References
+
+- `src/types/index.ts` (type definitions)
+- `docs/ARCHITECTURE.md` (strategic direction)
