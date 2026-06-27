@@ -5,6 +5,9 @@ import type { LinkNode } from "../types/index.js";
 
 export function parseWikilink(_text: string): LinkNode[] {
   const text = _text;
+  //^\[\[(?<name>[^\]\|\r\n]+?)(?:\|(?<title>[^\]\|\r\n]+?))?\]\](?<agglu>[^\p{P}\s]*)$
+  // TODO: thoroughly test optimized greedy version
+  //^\[\[(?<name>[^\]\|\r\n]+)(?:\|(?<title>[^\]\|\r\n]+))?\]\](?<agglu>[^\p{P}\s]*)$
   // Match [[...]] even if preceded by a backslash
   const regex = /\\?\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
   const results: LinkNode[] = [];

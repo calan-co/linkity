@@ -1,6 +1,8 @@
 // linkity/src/parsers/url.ts
 // Raw URL parser
 
+// TODO: perform extensive testing and validation of this URI regex
+// ^(?:(?:\[(?<text>.+?)\])?\((?:(?<protocol>(?:[^:]+)s?)?:\/\/)?(?:(?<user>[^:\n\r]+):(?<pass>[^@\n\r]+)@)?(?<host>(?:www\.)?(?:[^:\/\n\r]+))(?::(?<port>\d+))?\/?(?<resource>[^?#\n\r]+)?\??(?<query>[^#\n\r]*)?\#?(?<anchor>[^\n\r]*)?\))$
 import type { LinkNode } from "../types/index.js";
 
 export function parseRawUrl(_text: string): LinkNode[] {

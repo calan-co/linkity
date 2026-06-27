@@ -1,0 +1,1 @@
+- [ ] implement obsidian resolver with these rules https://gist.github.com/dhpwd/9bb86c53b69cb63e09ccca42e3bf924c
