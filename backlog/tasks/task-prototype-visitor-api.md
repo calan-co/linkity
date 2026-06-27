@@ -11,6 +11,8 @@ classification:
   diataxis: how-to
   sensitivity: internal
 tags: [api, extensibility, linkity]
+links:
+  - related: "[[task-reconcile-semantify-linkity-scope]]"
 ---
 
 **Estimated Effort:** 1 hour  

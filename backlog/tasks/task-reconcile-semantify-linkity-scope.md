@@ -11,6 +11,8 @@ classification:
   diataxis: explanation
   sensitivity: internal
 tags: [architecture, semantify, linkity, adapters]
+links:
+  - related: "[[task-prototype-visitor-api]]"
 ---
 
 **Estimated Effort:** 3 hours  

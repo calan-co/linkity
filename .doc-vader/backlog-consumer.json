@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "roots": {
+    "backlog": "backlog",
+    "active": "backlog/tasks",
+    "archive": "backlog/archive",
+    "records": "backlog/records",
+    "audit": "backlog/audit"
+  },
+  "task": {
+    "claimStorePath": ".doc-vader/runtime/task-claims"
+  },
+  "automation": {
+    "autoCloseOnMerge": true,
+    "autoEvidenceFromWorkflowRuns": true,
+    "preserveCommitMap": true,
+    "prePushValidation": {
+      "schemaSuite": "doc-vader:work-management/default",
+      "schemas": {
+        "baseline": "schemas/frontmatter/by-type/work-item/1.0.0.json",
+        "changed": "schemas/frontmatter/by-type/work-item/current.json",
+        "archive": "schemas/frontmatter/by-type/work-item/1.0.0.json"
+      },
+      "severity": {
+        "baseline": "error",
+        "changed": "error",
+        "archive": "none",
+        "checklist": "error"
+      }
+    }
+  }
+}

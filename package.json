@@ -47,8 +47,14 @@
     "lint:md": "markdownlint --ignore node_modules .",
     "docs:validate": "doc-vader validate",
     "docs:validate:relaxed": "npm run docs:validate -- --no-strict",
-    "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate",
-    "postinstall": "$(npm bin)/jsonschema-tools install-git-hook"
+    "precommit": "npm run hooks:pre-push",
+    "postinstall": "$(npm bin)/jsonschema-tools install-git-hook",
+    "docs:lint": "npm run docs:validate",
+    "backlog:validate": "npm run backlog:doc-vader -- backlog validate --dir backlog --fail-on error",
+    "backlog:validate:ci": "npm run backlog:validate",
+    "hooks:pre-commit": "npm run docs:lint && npm run backlog:validate",
+    "hooks:pre-push": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:lint && npm run backlog:validate",
+    "backlog:doc-vader": "sh scripts/backlog/run-doc-vader.sh"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",

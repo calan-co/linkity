@@ -11,7 +11,7 @@ classification:
   diataxis: explanation
   sensitivity: internal
 links:
-  - provenance: "[[mvp scope#Do you need a tokenizer?]]"
+  - provenance: "mvp scope#Do you need a tokenizer?"
 tags: [architecture, dependencies, linkity]
 ---
 
