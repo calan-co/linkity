@@ -1,5 +1,7 @@
 ---
 # yaml-language-server: $schema=../schemas/document.frontmatter.schema.json
+type: document
+subtype: architecture
 title: "ADR: Semantify-Linkity Projection Architecture and Boundaries"
 classification:
   diataxis: explanation
@@ -47,6 +49,20 @@ The remaining responsibility seam is policy. Linkity may normalize references,
 generate canonical reference outputs, and produce link-domain diagnostics, but
 Doc-Vader or another governance consumer owns repository traversal policy,
 lifecycle policy, severity mapping, and CI gate outcomes.
+
+## 2026 Implementation Reconciliation
+
+After defining Linkity's canonical link-scoped `Ast` and `Syntax` parser/printer dialects, Semantify is deferred from the MVP implementation path. The current `Ast`/`Syntax` model already owns the canonical single-link semantic contract and syntax projection boundary needed for parse/render transforms.
+
+Semantify remains a possible future integration if Linkity needs cross-product projection rules, profile packaging beyond syntax dialects, or shared semantic graph contracts. It should not appear as a placeholder runtime dependency until that value is concrete and can be fully integrated without violating Linkity constraints: ESM-first, browser-compatible, minimal dependencies, and no governance policy leakage.
+
+Current dependency direction for MVP is therefore:
+
+```text
+Concrete link syntax -> Linkity Syntax.parse -> Linkity Ast -> Syntax.render -> target syntax
+```
+
+Doc-Vader and other governance consumers may use Linkity output, but Linkity remains independent of lifecycle policy, repository traversal, and CI gate outcomes.
 
 ## Terminology
 

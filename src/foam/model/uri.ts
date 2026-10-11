@@ -449,12 +449,13 @@ export function asAbsoluteUri(
   if (baseFolders.length === 0) {
     throw new Error("At least one base folder needed to compute URI");
   }
+  const firstBaseFolder = baseFolders[0]!;
   const path = uriOrPath instanceof URI ? uriOrPath.path : uriOrPath;
 
   const isDrivePath = /^[a-zA-Z]:/.test(path);
   // Check if this is already a POSIX absolute path
   if (path.startsWith("/") || isDrivePath) {
-    const uri = baseFolders[0].forPath(path); // Validate the path
+    const uri = firstBaseFolder.forPath(path); // Validate the path
 
     if (forceSubfolder) {
       const isAlreadySubfolder = baseFolders.some((folder) =>
@@ -463,13 +464,13 @@ export function asAbsoluteUri(
           : uri.path.startsWith(folder.path)
       );
       if (!isAlreadySubfolder) {
-        return baseFolders[0].joinPath(uri.path);
+        return firstBaseFolder.joinPath(uri.path);
       }
     }
     return uri;
   }
   let tokens = path.split("/");
-  while (tokens[0].trim() === "") {
+  while (tokens[0]?.trim() === "") {
     tokens.shift();
   }
   const firstDir = tokens[0];
@@ -482,5 +483,5 @@ export function asAbsoluteUri(
       }
     }
   }
-  return baseFolders[0].joinPath(...tokens);
+  return firstBaseFolder.joinPath(...tokens);
 }

@@ -100,7 +100,7 @@ tags: [linkity, docs]
 - [ ] Test dry-run output format
 - [ ] Test actual frontmatter insertion
 - [ ] Verify generated frontmatter validates:
-  - [ ] Run `npm run docs:validate` after generation
+  - [ ] Run `pnpm docs:validate` after generation
   - [ ] Schema directive paths resolve correctly
   - [ ] All required fields present
 - [ ] Test idempotency (re-run doesn't duplicate)
@@ -122,7 +122,7 @@ tags: [linkity, docs]
 ✅ Dry-run mode shows clear preview of changes  
 ✅ Idempotent: re-running doesn't corrupt existing frontmatter  
 ✅ Schema directive paths are correct from any folder depth  
-✅ `npm run docs:validate` passes after generation  
+✅ `pnpm docs:validate` passes after generation  
 ✅ Title and ID generation is sensible and readable  
 ✅ Works for both document and work-item types
 
@@ -201,7 +201,7 @@ node scripts/fix-docs-diataxis.mjs --write-frontmatter --type work-item
 node scripts/fix-docs-diataxis.mjs --write-frontmatter
 
 # Validate after generation
-npm run docs:validate
+pnpm docs:validate
 ```
 
 ## Follow-up Enhancements

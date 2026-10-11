@@ -5,6 +5,8 @@ export default {
     globals: true,
     environment: "node",
     clearMocks: true,
+    include: ["tests/**/*.test.ts"],
+    exclude: ["node_modules/**", "dist/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

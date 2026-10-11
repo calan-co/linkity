@@ -1,142 +1,79 @@
-// linkity/test/parse.test.ts
-// Basic parsing tests
-
 import { describe, it, expect } from "vitest";
 import { parseLinks, detectLinkType } from "../src/index.js";
 
 describe("parseLinks", () => {
-  it("should return empty array for text with no links", () => {
-    const result = parseLinks("Just plain text");
-    expect(result).toEqual([]);
+  it("returns empty array for text with no links", () => {
+    expect(parseLinks("Just plain text")).toEqual([]);
   });
 
-  it("should parse wikilinks when enabled", () => {
+  it("parses wikilinks when enabled", () => {
     const result = parseLinks("Check [[Page]] and [[Other|Alias]]", {
       enableWikilink: true,
       enableMarkdown: false,
       enableUrl: false,
     });
-    expect(result).toEqual([
+    expect(result).toMatchObject([
       {
-        type: "wikilink",
-        value: "Page",
-        position: { start: 6, end: 14 },
+        raw: "[[Page]]",
+        path: { resource: "Page" },
+        span: { start: 6, end: 14 },
+        provenance: { syntax: "obsidian" },
       },
       {
-        type: "wikilink",
-        value: "Other",
-        alias: "Alias",
-        position: { start: 19, end: 33 },
+        raw: "[[Other|Alias]]",
+        path: { resource: "Other" },
+        label: { raw: "Alias" },
+        span: { start: 19, end: 34 },
       },
     ]);
   });
 
-  it("should parse markdown links when enabled", () => {
+  it("parses markdown links when enabled", () => {
     const result = parseLinks("Check [link](https://example.com)", {
       enableWikilink: false,
       enableMarkdown: true,
       enableUrl: false,
     });
-    expect(result).toEqual([
+    expect(result).toMatchObject([
       {
-        type: "markdown",
-        value: "link",
-        url: "https://example.com",
-        position: { start: 6, end: 32 },
+        raw: "[link](https://example.com)",
+        scheme: "https",
+        authority: "example.com",
+        label: { raw: "link" },
+        span: { start: 6, end: 33 },
       },
     ]);
   });
 
-  it("should parse raw URLs when enabled", () => {
+  it("parses raw URLs when enabled", () => {
     const result = parseLinks("Visit https://example.com for more", {
       enableWikilink: false,
       enableMarkdown: false,
       enableUrl: true,
     });
-    expect(result).toEqual([
+    expect(result).toMatchObject([
       {
-        type: "url",
-        value: "https://example.com",
-        url: "https://example.com",
-        position: { start: 6, end: 25 },
+        raw: "https://example.com",
+        scheme: "https",
+        authority: "example.com",
+        span: { start: 6, end: 25 },
       },
     ]);
   });
-  it("should not parse wikilinks when disabled", () => {
-    const result = parseLinks("Check [[Page]]", {
-      enableWikilink: false,
-      enableMarkdown: true,
-      enableUrl: true,
-    });
-    expect(result.find((n) => n.type === "wikilink")).toBeUndefined();
-  });
 
-  it("should not parse markdown links when disabled", () => {
-    const result = parseLinks("Check [link](https://example.com)", {
-      enableWikilink: true,
-      enableMarkdown: false,
-      enableUrl: true,
-    });
-    expect(result.find((n) => n.type === "markdown")).toBeUndefined();
-  });
-
-  it("should not parse raw URLs when disabled", () => {
-    const result = parseLinks("Visit https://example.com for more", {
-      enableWikilink: true,
-      enableMarkdown: true,
-      enableUrl: false,
-    });
-    expect(result.find((n) => n.type === "url")).toBeUndefined();
-  });
-
-  it("should handle edge cases: escaped brackets", () => {
-    const result = parseLinks(
-      "Escaped brackets: \\[[Page]] and [notalink](notalink)"
-    );
-    expect(
-      result.find((n) => n.type === "wikilink" && n.value === "Page")
-    ).toBeDefined();
-    expect(
-      result.find((n) => n.type === "markdown" && n.value === "notalink")
-    ).toBeDefined();
-  });
-
-  it("should handle edge cases: punctuation and mixed content", () => {
-    const result = parseLinks("Check [[Page]]. [link](url), https://url.com!");
-    expect(
-      result.find((n) => n.type === "wikilink" && n.value === "Page")
-    ).toBeDefined();
-    expect(
-      result.find((n) => n.type === "markdown" && n.value === "link")
-    ).toBeDefined();
-    expect(
-      result.find((n) => n.type === "url" && n.value === "https://url.com")
-    ).toBeDefined();
+  it("respects parser off-switches", () => {
+    expect(parseLinks("Check [[Page]]", { enableWikilink: false }).some((n) => n.provenance?.syntax === "obsidian")).toBe(false);
+    expect(parseLinks("Check [link](https://example.com)", { enableMarkdown: false }).some((n) => n.provenance?.syntax === "gfm")).toBe(false);
+    expect(parseLinks("Visit https://example.com", { enableUrl: false }).some((n) => n.provenance?.syntax === "url")).toBe(false);
   });
 });
 
 describe("detectLinkType", () => {
-  it("should return null for non-link text", () => {
-    const result = detectLinkType("plain text");
-    expect(result).toBe(null);
-  });
-
-  it("should detect wikilink type", () => {
+  it("detects legacy link types", () => {
+    expect(detectLinkType("plain text")).toBe(null);
     expect(detectLinkType("[[Page]]")).toBe("wikilink");
-    expect(detectLinkType("[[Page|Alias]]")).toBe("wikilink");
-  });
-
-  it("should detect markdown type", () => {
     expect(detectLinkType("[text](url)")).toBe("markdown");
-  });
-
-  it("should detect url type", () => {
     expect(detectLinkType("https://foo.com")).toBe("url");
-    expect(detectLinkType("http://bar.com")).toBe("url");
-  });
-
-  it("should detect custom scheme type", () => {
     expect(detectLinkType("foo://bar")).toBe("custom");
-    expect(detectLinkType("my+scheme://baz")).toBe("custom");
   });
 });

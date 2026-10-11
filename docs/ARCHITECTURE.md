@@ -1,72 +1,111 @@
 ---
 # yaml-language-server: $schema=./schemas/document.frontmatter.schema.json
+type: document
+subtype: architecture
 title: MVP Scoping & Strategic Direction
 classification:
   diataxis: explanation
 status: draft
 ---
 
-## MVP Scoping Decision: Simple Parser vs AST
+## MVP Scoping Decision: Link AST, Not Document AST
 
-**Linkity** is intentionally scoped as a simple, link-centric parser for its MVP. Rather than building a full document AST, Linkity extracts links (Markdown, wikilink, raw URL) into a normalized array of link records, optionally enriched with context metadata (e.g., position, inHeading, inCode).
+**Linkity** is scoped as a universal single-link parser and renderer. It parses one concrete link string into a canonical link-scoped `Ast`, then renders that AST into registered `Syntax` dialects.
+
+Linkity does not parse full documents. Consumers own document parsing, graph state, file loading, and persistence.
 
 ### Rationale
 
-- **Performance:** Fast, low-overhead extraction for batch and streaming use cases.
-- **Simplicity:** Easier maintenance, minimal spec drift, and clear contract for consumers.
-- **Extensibility:** Output is a stable TypeScript interface (`LinkNode`), easily consumed by other tools or pipelines.
-- **Integration:** Designed to plug into existing ASTs (remark, micromark, etc.) if needed, without duplicating document structure.
+- **Performance:** Cheap syntax `match()` rules let consumers find candidate spans without Linkity owning document parsing.
+- **Simplicity:** Linkity models link semantics only, avoiding Markdown/HTML/YAML parser coupling.
+- **Extensibility:** New dialects register `Syntax` implementations with `match`, `parse`, `render`, and `supports`.
+- **Transforms:** Syntax-to-syntax transforms flow through canonical `Ast` with explicit lossy-render diagnostics.
 
-### When to Reconsider AST
+### When to Reconsider Document AST
 
-- If advanced transforms, context-sensitive rewrites, or round-trip fidelity become core requirements.
-- If plugin/visitor APIs or IDE integrations demand hierarchical document modeling.
+Only if Linkity itself must model non-link document structure such as paragraphs, headings, lists, or code blocks.
+
+## Link-scoped AST and Syntax Dialects
+
+Linkity parses individual link strings into a canonical link-scoped `Ast` and renders that AST into registered `Syntax` dialects. It does not parse full documents or own repository traversal. Consumers use syntax `match()` spans with their own document parsers, graph indexes, and file-system context.
+
+Each `Syntax` provides:
+
+- `match()` for cheap candidate detection
+- `parse()` for concrete syntax to canonical `Ast`
+- `render()` for canonical `Ast` to concrete syntax
+- `supports` for feature-based loss diagnostics
+
+Lossy rendering defaults to errors. Callers may opt into warnings.
+
+## Semantify Scope Reconciliation
+
+Linkity's MVP reference normalization is the canonical link-scoped `Ast` plus registered `Syntax` dialects. Semantify is deferred from the runtime path until it provides concrete value beyond this parser/printer model.
+
+Linkity owns:
+
+- single-link concrete syntax parsing
+- canonical `Ast` fields and provenance
+- syntax feature support and lossy render diagnostics
+- single-link rendering to target syntaxes
+
+Linkity does not own governance policy, lifecycle rules, repository traversal, CI gate outcomes, or graph persistence.
+
+## Product Role Contract
+
+Linkity owns universal single-link parsing and rendering:
+
+- concrete link syntax parsing through `Syntax.parse()`
+- cheap candidate detection through `Syntax.match()`
+- canonical link-scoped `Ast` fields and provenance
+- feature support declarations and lossy render diagnostics
+- rendering one canonical link AST into a target syntax
+
+Linkity does not own schema policy, work-item lifecycle policy, repository traversal, graph persistence, document parsing, or CI gate outcomes. Consumers such as Doc-Vader provide artifact indexes, lifecycle state, file loading, and policy decisions through adapters and caller-provided context.
+
+## Ecosystem Use Cases and Boundaries
+
+### Automatic link updates
+
+External graph or repository tools own rename/move detection, affected-document discovery, file loading, and persistence. Linkity owns only the single-link operation: parse the existing link into `Ast`, update the relevant AST fields supplied by the caller, and render the new link with the target `Syntax`.
+
+### Dynamic title resolution
+
+External resolvers own current target-title lookup and invalidation. Linkity can represent label semantics on `Ast.label`, but it does not monitor target documents or decide when displayed text changes.
+
+### Document-wide syntax transformation
+
+External document parsers own full-document syntax, ignored regions, and span replacement. They may use `Syntax.match()` for cheap link candidates, then call `Syntax.parse()` and `Syntax.render()` per single link. Lossy projections remain explicit diagnostics from Linkity.
+
+These boundaries keep Linkity independent from Markdown, HTML, YAML, repository, and graph implementations.
 
 ## Future-Proofing
 
-- Output includes optional context fields (e.g., `inHeading`, `headingLevel`, `inCode`).
-- Experimental hooks (e.g., `visitLinks`) may be added for traversal or transformation.
-- Internal AST layering is deferred until clear demand emerges, with public contract stability prioritized.
-
-### Visitor API: `visitLinks`
-
-Linkity provides a visitor function, `visitLinks`, for extensible traversal or transformation of link records. This enables consumers to process, filter, or transform links with minimal coupling, and prepares for future migration to an AST or IR model if needed.
-
-**Usage Example:**
-
-```ts
-import { visitLinks } from "linkity/utils";
-
-const results = visitLinks(links, (link, idx, arr) => {
-  // Example: collect all URLs
-  return link.url;
-});
-```
-
-See code comments in `src/utils/index.ts` for further details.
+- Context-dependent parsing receives caller-provided `ParseContext` such as `sourcePath` and `fileIndex`.
+- Dynamic title resolution and automatic link updates are enabled by `Ast` semantics but owned by external graph/index tools.
+- Full document AST layering is deferred unless Linkity must model non-link document structure.
 
 ## Suggested Output Contract
 
 ```ts
-interface LinkNode {
-  raw: string;
-  url: string;
-  text?: string;
-  type: "markdown" | "wikilink" | "url";
-  start?: number;
-  end?: number;
-  context?: {
-    inCode?: boolean;
-    inHeading?: boolean;
-    headingLevel?: number;
-    inline?: boolean;
-  };
+interface Ast {
+  raw?: string;
+  span?: Span;
+  scheme?: string;
+  authority?: string;
+  path?: { containers?: string[]; resource?: string; extension?: string; separator?: string; absolute?: boolean };
+  anchor?: string;
+  block?: string;
+  query?: Record<string, string | string[] | true>;
+  label?: { raw: string; semantic?: "literal" | "implicit" | "empty" };
+  embed?: boolean;
+  provenance?: Provenance;
 }
 ```
 
 ## Summary
 
-Linkity’s MVP is a focused, high-performance link parser. AST expansion is reserved for future needs, ensuring rapid iteration and low maintenance while keeping the door open for richer document modeling if required.
+Linkity’s MVP is a link-scoped AST parser/printer with syntax dialects and explicit lossy-render diagnostics.
 
 See the [[mvp-scope-context|original analysis]] for options considered and details on how this decision was made.
 

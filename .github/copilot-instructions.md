@@ -51,10 +51,10 @@ See `CONTRIBUTING.md` for full frontmatter examples and validation commands.
 ## Key Commands
 
 ```bash
-npm run build      # Build all targets (Node ESM/CJS + browser)
-npm test           # Run tests (Vitest)
-npm run typecheck  # Type check only
-npm run dev        # Watch mode
+pnpm build      # Build all targets (Node ESM/CJS + browser)
+pnpm test       # Run tests (Vitest)
+pnpm typecheck  # Type check only
+pnpm dev        # Watch mode
 ```
 
 ## Essential References

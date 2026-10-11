@@ -17,7 +17,7 @@ tags: [linkity, contributing, development]
 ### Prerequisites
 
 - Node.js >= 18
-- npm (comes with Node.js)
+- pnpm 11.9.0
 
 ### Quick Start
 
@@ -27,13 +27,13 @@ git clone <repository-url>
 cd linkity
 
 # Install dependencies
-npm install
+pnpm install
 
 # Run tests in watch mode
-npm run test:watch
+pnpm test:watch
 
 # Build all targets
-npm run build
+pnpm build
 ```
 
 ## Developer Workflows
@@ -43,7 +43,7 @@ npm run build
 Build all targets (Node ESM/CJS + browser):
 
 ```bash
-npm run build
+pnpm build
 ```
 
 This uses tsup (see `tsup.config.ts`) and outputs to `dist/`:
@@ -54,23 +54,23 @@ This uses tsup (see `tsup.config.ts`) and outputs to `dist/`:
 ### Development Mode
 
 ```bash
-npm run dev  # Watch mode for development
+pnpm dev  # Watch mode for development
 ```
 
 ## Running Tests and Type Checking
 
 ```bash
-npm test              # Run tests once
-npm run test:watch    # Watch mode
-npm run typecheck     # Type checking only
+pnpm test              # Run tests once
+pnpm test:watch        # Watch mode
+pnpm typecheck         # Type checking only
 ```
 
 ### Linting
 
 ```bash
-npm run lint:code     # ESLint
-npm run lint:md       # Markdownlint
-npm run docs:validate # Validate docs frontmatter
+pnpm lint:code        # ESLint
+pnpm lint:md          # Markdownlint
+pnpm docs:validate    # Validate docs frontmatter
 ```
 
 ## Adding or Modifying a Parser
@@ -179,7 +179,7 @@ Set `classification.diataxis` in frontmatter to match the folder location.
 
 ```bash
 # Validate frontmatter (strict by default)
-npm run docs:validate
+pnpm docs:validate
 
 # Non-strict mode (warnings only)
 node scripts/validate-frontmatter.mjs --no-strict
@@ -200,7 +200,7 @@ Add to `package.json` (if not already present):
 ```json
 {
   "scripts": {
-    "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate"
+    "precommit": "pnpm typecheck && pnpm test && pnpm lint:code && pnpm lint:md && pnpm docs:validate"
   }
 }
 ```
@@ -210,7 +210,7 @@ Create `.husky/pre-commit`:
 ```bash
 #!/usr/bin/env sh
 . "$(dirname "$0")/_/husky.sh"
-npm run precommit
+pnpm precommit
 ```
 
 Make it executable:
@@ -274,12 +274,12 @@ Breaking changes require a major version bump.
 
 ## Release Process
 
-1. Ensure all tests pass: `npm test`
-2. Ensure build succeeds: `npm run build`
+1. Ensure all tests pass: `pnpm test`
+2. Ensure build succeeds: `pnpm build`
 3. Update version in `package.json`
 4. Tag release: `git tag v<version>`
 5. Push tag: `git push --tags`
-6. Publish: `npm publish`
+6. Publish: `pnpm publish`
 
 The `prepublishOnly` hook automatically runs build and tests before publishing.
 

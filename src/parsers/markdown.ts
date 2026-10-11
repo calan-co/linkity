@@ -1,27 +1,14 @@
-// linkity/src/parsers/markdown.ts
-// Markdown link parser ([text](url))
+import type { Ast } from "../types/index.js";
+import { gfmSyntax } from "../syntaxes/index.js";
 
-import type { LinkNode } from "../types/index.js";
-
-export function parseMarkdownLink(_text: string): LinkNode[] {
-  // Match all [text](url) links, including those preceded by a backslash
-  const text = _text;
-  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  const results: LinkNode[] = [];
-  let match;
-  while ((match = regex.exec(text)) !== null) {
-    const [full, value, url] = match;
-    if (typeof value === "string" && typeof url === "string") {
-      results.push({
-        type: "markdown",
-        value,
-        url,
-        position: {
-          start: match.index,
-          end: match.index + full.length - 1,
-        },
-      });
-    }
+export function parseMarkdownLink(text: string): Ast[] {
+  const results: Ast[] = [];
+  let index = 0;
+  while (index < text.length) {
+    const match = gfmSyntax.match(text, { startIndex: index });
+    if (!match) break;
+    results.push({ ...gfmSyntax.parse(match.raw), span: match.span });
+    index = match.span.end;
   }
   return results;
 }

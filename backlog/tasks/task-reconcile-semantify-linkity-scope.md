@@ -5,12 +5,12 @@ title: Reconcile Semantify and Linkity Scope
 type: work-item
 subtype: architecture
 lifecycle: active
-status: proposed
+status: complete
 priority: high
 classification:
   diataxis: explanation
   sensitivity: internal
-tags: [architecture, semantify, linkity, adapters]
+tags: [afk, architecture, semantify, linkity, adapters]
 links:
   - related: "[[task-prototype-visitor-api]]"
 ---
@@ -18,7 +18,7 @@ links:
 **Estimated Effort:** 3 hours  
 **Priority:** High  
 **Assignee:** TBD  
-**Depends On:** `docs/explanation/adr-semantify-linkity-boundaries.md`
+**Depends On:** `task-decide-semantify-integration`
 
 ## Overview
 
@@ -29,16 +29,20 @@ generation internally.
 
 ## Checklist
 
-- [ ] Define the minimal Linkity-native link occurrence contract.
-- [ ] Confirm Linkity encapsulates Semantify profiles as part of its reference normalization path.
-- [ ] Add examples showing Linkity-owned Semantify profiles consuming Linkity syntax output.
-- [ ] Move traversal policy and CI gate language to Doc-Vader or governance-consumer docs.
+- [x] Define the minimal Linkity-native canonical `Ast` contract.
+- [x] Confirm Semantify is deferred from MVP runtime path pending concrete value beyond `Ast`/`Syntax`.
+- [x] Add architecture notes showing `Syntax.parse -> Ast -> Syntax.render` as the MVP normalization path.
+- [x] Move traversal policy and CI gate language to Doc-Vader or governance-consumer docs.
 
 ## Success Criteria
 
-- Linkity uses Semantify profiles internally for reference normalization and generation.
-- The syntax extraction layer remains separable from repository traversal policy.
-- Governance policy is not assigned to Linkity.
+- [x] Linkity MVP reference normalization is defined through canonical `Ast` and `Syntax` dialects.
+- [x] The syntax extraction/rendering layer remains separable from repository traversal policy.
+- [x] Governance policy is not assigned to Linkity.
+
+## Validation
+
+- [x] Architecture docs updated to reflect Semantify deferral and Linkity-owned MVP normalization path.
 
 ## References
 

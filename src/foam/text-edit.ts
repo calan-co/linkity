@@ -59,7 +59,7 @@ const getOffset = (
   let offset = 0;
   let i = 0;
   while (i < position.line && i < lines.length) {
-    offset = offset + lines[i].length + eolLen;
+    offset = offset + lines[i]!.length + eolLen;
     i++;
   }
   return offset + Math.min(position.character, lines[i]?.length ?? 0);
