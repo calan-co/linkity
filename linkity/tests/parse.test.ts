@@ -97,6 +97,22 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should parse escaped opening brackets inside markdown labels", () => {
+    const result = parseLinks("[a\\[b](c)", {
+      enableWikilink: false,
+      enableMarkdown: true,
+      enableUrl: false,
+    });
+    expect(result).toEqual([
+      {
+        type: "markdown",
+        value: "a\\[b",
+        url: "c",
+        position: { start: 0, end: 8 },
+      },
+    ]);
+  });
+
   it("should parse raw URLs when enabled", () => {
     const result = parseLinks("Visit https://example.com for more", {
       enableWikilink: false,
@@ -277,6 +293,7 @@ describe("detectLinkType", () => {
 
   it("should detect markdown type", () => {
     expect(detectLinkType("[text](url)")).toBe("markdown");
+    expect(detectLinkType("[a\\[b](c)")).toBe("markdown");
   });
 
   it("should detect url type", () => {
