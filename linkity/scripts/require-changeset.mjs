@@ -43,8 +43,17 @@ if (changesets.length === 0) {
 for (const file of changesets) {
   const localPath = file.replace(/^linkity\//, "");
   const text = readFileSync(localPath, "utf8");
-  if (!/^---\r?\n(?:[\s\S]*?\r?\n)?---(?:\r?\n[\s\S]*)?$/m.test(text)) {
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/m);
+  if (!match) {
     console.error(`${file}: invalid changeset format`);
+    process.exit(1);
+  }
+  if (!/^['"]?linkity['"]?:\s*(patch|minor|major)\s*$/m.test(match[1])) {
+    console.error(`${file}: missing linkity bump`);
+    process.exit(1);
+  }
+  if (!match[2].trim()) {
+    console.error(`${file}: missing changeset summary`);
     process.exit(1);
   }
 }
