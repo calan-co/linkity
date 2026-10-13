@@ -48,6 +48,22 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should parse same-document wikilink fragments", () => {
+    const result = parseLinks("See [[#Intro]]", {
+      enableWikilink: true,
+      enableMarkdown: false,
+      enableUrl: false,
+    });
+    expect(result).toEqual([
+      {
+        type: "wikilink",
+        value: "",
+        fragment: "Intro",
+        position: { start: 4, end: 14 },
+      },
+    ]);
+  });
+
   it("should parse markdown links when enabled", () => {
     const result = parseLinks("Check [link](https://example.com)", {
       enableWikilink: false,
@@ -193,6 +209,8 @@ describe("detectLinkType", () => {
     expect(detectLinkType("[[Page]]")).toBe("wikilink");
     expect(detectLinkType("[[Page|Alias]]")).toBe("wikilink");
     expect(detectLinkType("[[Page#Section|Alias]]")).toBe("wikilink");
+    expect(detectLinkType("[[#Section]]")).toBe("wikilink");
+    expect(detectLinkType("[[Page]]x")).toBeNull();
   });
 
   it("should detect markdown type", () => {

@@ -1,4 +1,5 @@
-import tsParser from "@typescript-eslint/parser";
+import js from "@eslint/js";
+import prettierConfig from "eslint-config-prettier";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 export default [
@@ -12,6 +13,9 @@ export default [
       ".eslintrc.cjs",
     ],
   },
+  js.configs.recommended,
+  ...tsPlugin.configs["flat/recommended"],
+  prettierConfig,
   {
     files: ["**/*.{js,cjs,mjs,ts}"],
     languageOptions: {
@@ -31,14 +35,13 @@ export default [
   },
   {
     files: ["**/*.ts"],
-    languageOptions: {
-      parser: tsParser,
-    },
-    plugins: {
-      "@typescript-eslint": tsPlugin,
-    },
     rules: {
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "@typescript-eslint/no-duplicate-enum-values": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unsafe-declaration-merging": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "prefer-const": "off",
     },
   },
 ];
