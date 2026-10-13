@@ -15,10 +15,10 @@ export abstract class Position {
     if (positions.length === 0) {
       throw new TypeError();
     }
-    let result = positions[0];
+    let result = positions[0]!;
     for (let i = 1; i < positions.length; i++) {
-      const p = positions[i];
-      if (Position.isBefore(p, result!)) {
+      const p = positions[i]!;
+      if (Position.isBefore(p, result)) {
         result = p;
       }
     }
@@ -29,10 +29,10 @@ export abstract class Position {
     if (positions.length === 0) {
       throw new TypeError();
     }
-    let result = positions[0];
+    let result = positions[0]!;
     for (let i = 1; i < positions.length; i++) {
-      const p = positions[i];
-      if (Position.isAfter(p, result!)) {
+      const p = positions[i]!;
+      if (Position.isAfter(p, result)) {
         result = p;
       }
     }
