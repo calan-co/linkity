@@ -192,6 +192,7 @@ describe("detectLinkType", () => {
   it("should detect wikilink type", () => {
     expect(detectLinkType("[[Page]]")).toBe("wikilink");
     expect(detectLinkType("[[Page|Alias]]")).toBe("wikilink");
+    expect(detectLinkType("[[Page#Section|Alias]]")).toBe("wikilink");
   });
 
   it("should detect markdown type", () => {
