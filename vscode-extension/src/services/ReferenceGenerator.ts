@@ -63,8 +63,10 @@ export class ReferenceGenerator {
         continue;
       }
       
-      const label = link.alias || link.value;
-      const url = vscode.workspace.asRelativePath(uri);
+      const label = link.alias || link.value || link.anchor || '';
+      const url = link.anchor
+        ? `${vscode.workspace.asRelativePath(uri)}#${link.anchor}`
+        : vscode.workspace.asRelativePath(uri);
       
       // Deduplicate
       const key = `${label}:${url}`;

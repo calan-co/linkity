@@ -43,7 +43,7 @@ if (changesets.length === 0) {
 for (const file of changesets) {
   const localPath = file.replace(/^linkity\//, "");
   const text = readFileSync(localPath, "utf8");
-  if (!/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n[\s\S]*)?$/m.test(text)) {
+  if (!/^---\r?\n(?:[\s\S]*?\r?\n)?---(?:\r?\n[\s\S]*)?$/m.test(text)) {
     console.error(`${file}: invalid changeset format`);
     process.exit(1);
   }

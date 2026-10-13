@@ -12,6 +12,16 @@ function walk(dir) {
   }
 }
 
+function hasScalar(frontmatter, field) {
+  const match = frontmatter.match(new RegExp(`^${field}:([^\\r\\n]*)`, "m"));
+  if (!match) return false;
+  return match[1].replace(/#.*/, "").trim().length > 0;
+}
+
+function hasMapping(frontmatter, field) {
+  return new RegExp(`^${field}:[^\\S\\r\\n]*(?:\\r?\\n[ \\t]+\\S)`, "m").test(frontmatter);
+}
+
 walk("docs");
 let failures = 0;
 
@@ -25,9 +35,10 @@ for (const file of files) {
   }
 
   for (const field of required) {
-    const hasValue = new RegExp(`^${field}:[^\\S\\r\\n]*\\S`, "m").test(match[1]);
-    const hasMapping = new RegExp(`^${field}:[^\\S\\r\\n]*(?:\\r?\\n[ \\t]+\\S)`, "m").test(match[1]);
-    if (!hasValue && !hasMapping) {
+    const valid = field === "classification"
+      ? hasScalar(match[1], field) || hasMapping(match[1], field)
+      : hasScalar(match[1], field);
+    if (!valid) {
       console.error(`${file}: missing ${field}`);
       failures++;
     }
