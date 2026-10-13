@@ -389,7 +389,7 @@ function peg$parse(input, options) {
 
   function scanMarkdown(text) {
     const links = [];
-    const re = /\[([^\[\]]+)\]\(([^)]+)\)/g;
+    const re = /\[((?:\\\[|[^\[\]])+)\]\(([^)]+)\)/g;
     let match;
     while ((match = re.exec(text)) !== null) {
       links.push(markdown(match[1], match[2], match.index, match.index + match[0].length - 1));
