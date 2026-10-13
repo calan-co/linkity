@@ -162,6 +162,20 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should trim unmatched closing parentheses around markdown-delimited URLs", () => {
+    const result = parseLinks("[site](https://example.com)", {
+      enableWikilink: false,
+      enableMarkdown: true,
+      enableUrl: true,
+    });
+    expect(result.find((link) => link.type === "url")).toEqual({
+      type: "url",
+      value: "https://example.com",
+      url: "https://example.com",
+      position: { start: 7, end: 26 },
+    });
+  });
+
   it("should preserve URL scheme casing but compare schemes case-insensitively", () => {
     const result = parseLinks("Visit HTTPS://example.com", {
       enableWikilink: false,

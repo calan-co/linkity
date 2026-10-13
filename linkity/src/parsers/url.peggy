@@ -12,7 +12,23 @@
 
   function cleanUrl(rawUrl) {
     let url = rawUrl.replace(/[.,!?;:]+$/, "");
-    while (url.endsWith("]") && bracketDelta(url) < 0) url = url.slice(0, -1);
+    const parenDelta = (value) => (value.match(/\(/g) || []).length - (value.match(/\)/g) || []).length;
+    let changed = true;
+    while (changed) {
+      changed = false;
+      if (url.endsWith("]") && bracketDelta(url) < 0) {
+        url = url.slice(0, -1);
+        changed = true;
+      } else if (url.endsWith(")") && parenDelta(url) < 0) {
+        url = url.slice(0, -1);
+        changed = true;
+      }
+      const trimmed = url.replace(/[.,!?;:]+$/, "");
+      if (trimmed !== url) {
+        url = trimmed;
+        changed = true;
+      }
+    }
     return url;
   }
 
