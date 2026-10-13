@@ -146,6 +146,22 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should trim unmatched closing brackets around prose-delimited URLs", () => {
+    const result = parseLinks("See [https://example.com]", {
+      enableWikilink: false,
+      enableMarkdown: false,
+      enableUrl: true,
+    });
+    expect(result).toEqual([
+      {
+        type: "url",
+        value: "https://example.com",
+        url: "https://example.com",
+        position: { start: 5, end: 24 },
+      },
+    ]);
+  });
+
   it("should preserve URL scheme casing but compare schemes case-insensitively", () => {
     const result = parseLinks("Visit HTTPS://example.com", {
       enableWikilink: false,
@@ -253,6 +269,7 @@ describe("detectLinkType", () => {
     expect(detectLinkType("https://foo.com")).toBe("url");
     expect(detectLinkType("HTTP://bar.com")).toBe("url");
     expect(detectLinkType("https://[::1]/docs")).toBe("url");
+    expect(detectLinkType("https://example.com]")).toBeNull();
   });
 
   it("should detect custom scheme type", () => {

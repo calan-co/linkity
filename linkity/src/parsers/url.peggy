@@ -6,18 +6,29 @@
     return fragment || undefined;
   }
 
+  function bracketDelta(url) {
+    return (url.match(/\[/g) || []).length - (url.match(/\]/g) || []).length;
+  }
+
+  function cleanUrl(rawUrl) {
+    let url = rawUrl.replace(/[.,!?;:]+$/, "");
+    while (url.endsWith("]") && bracketDelta(url) < 0) url = url.slice(0, -1);
+    return url;
+  }
+
   function urlNode(scheme, rawUrl) {
     const loc = location();
-    const cleanUrl = rawUrl.replace(/[.,!?;:]+$/, "");
-    const fragment = fragmentOf(cleanUrl);
+    const url = cleanUrl(rawUrl);
+    const fragment = fragmentOf(url);
     return {
       scheme,
-      value: cleanUrl,
-      url: cleanUrl,
+      value: url,
+      url,
+      ...(bracketDelta(url) !== 0 ? { invalid: true } : {}),
       ...(fragment ? { fragment } : {}),
       position: {
         start: loc.start.offset,
-        end: loc.start.offset + cleanUrl.length,
+        end: loc.start.offset + url.length,
       },
     };
   }

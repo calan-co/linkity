@@ -6,7 +6,7 @@ import { parse as parseUrlSyntax } from "../parsers/url.generated.js";
 import type { LinkType } from "../types/index.js";
 
 type Positioned = { alias?: string; position?: { start: number; end: number } };
-type ParsedUrlSyntax = { scheme?: string; value?: string; position?: { start: number; end: number } };
+type ParsedUrlSyntax = { invalid?: boolean; scheme?: string; value?: string; position?: { start: number; end: number } };
 
 function spansWholeInput(node: Positioned, input: string, inclusiveEnd: boolean): boolean {
   if (node.position?.start !== 0) return false;
@@ -16,7 +16,7 @@ function spansWholeInput(node: Positioned, input: string, inclusiveEnd: boolean)
 function parseWholeUrl(str: string): ParsedUrlSyntax | null {
   try {
     const node = parseUrlSyntax(str) as ParsedUrlSyntax;
-    return spansWholeInput(node, str, false) ? node : null;
+    return !node.invalid && spansWholeInput(node, str, false) ? node : null;
   } catch {
     return null;
   }
