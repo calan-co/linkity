@@ -13,7 +13,7 @@ export {
 } from "./parsers/index.js";
 
 // Re-export utilities
-export { detectLinkType } from "./utils/index.js";
+export { detectLinkType, visitLinks } from "./utils/index.js";
 
 // Main API
 import type { LinkNode, LinkityParseOptions } from "./types/index.js";

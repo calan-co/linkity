@@ -45,7 +45,7 @@
     "prepublishOnly": "npm run build && npm run test",
     "lint:code": "eslint .",
     "lint:md": "markdownlint --ignore node_modules .",
-    "docs:validate": "node scripts/lint-work-item-frontmatter.mjs && node scripts/docs-api-guard.mjs",
+    "docs:validate": "node scripts/lint-work-item-frontmatter.mjs && node scripts/lint-doc-frontmatter.mjs && node scripts/docs-api-guard.mjs",
     "docs:validate:relaxed": "npm run docs:validate",
     "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate",
     "postinstall": "node scripts/install-jsonschema-hook.mjs",

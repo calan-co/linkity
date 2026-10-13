@@ -7,7 +7,7 @@ let failures = 0;
 
 for (const file of readdirSync(dir).filter((name) => name.endsWith(".md"))) {
   const text = readFileSync(join(dir, file), "utf8");
-  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) {
     console.error(`${file}: missing YAML frontmatter`);
     failures++;

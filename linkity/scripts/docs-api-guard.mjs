@@ -6,15 +6,22 @@ const docs = [
   ["visitLinks", "docs/reference/visitLinks.md"],
   ["LinkNode", "docs/reference/types.md"],
 ];
-const source =
-  readFileSync("src/index.ts", "utf8") +
-  readFileSync("src/types/index.ts", "utf8") +
-  readFileSync("src/utils/index.ts", "utf8");
+const entry = readFileSync("src/index.ts", "utf8");
 let failures = 0;
 
+function isPublicExport(name) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return (
+    new RegExp(`export\\s+(async\\s+)?function\\s+${escaped}\\b`).test(entry) ||
+    new RegExp(`export\\s+(interface|type|class|const|let|var)\\s+${escaped}\\b`).test(entry) ||
+    new RegExp(`export\\s+type\\s*\\{[^}]*\\b${escaped}\\b[^}]*\\}`).test(entry) ||
+    new RegExp(`export\\s*\\{[^}]*\\b${escaped}\\b[^}]*\\}`).test(entry)
+  );
+}
+
 for (const [name, path] of docs) {
-  if (!source.includes(name)) {
-    console.error(`${name}: not exported by source`);
+  if (!isPublicExport(name)) {
+    console.error(`${name}: not exported by src/index.ts`);
     failures++;
   }
   if (!existsSync(path)) {
