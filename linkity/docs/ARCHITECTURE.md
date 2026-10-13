@@ -1,9 +1,14 @@
 ---
 # yaml-language-server: $schema=./schemas/document.frontmatter.schema.json
+id: explanation-architecture
 title: MVP Scoping & Strategic Direction
+type: document
+subtype: explanation
+lifecycle: active
+status: draft
 classification:
   diataxis: explanation
-status: draft
+  sensitivity: public
 ---
 
 ## MVP Scoping Decision: Simple Parser vs AST

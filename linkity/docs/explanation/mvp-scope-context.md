@@ -1,3 +1,16 @@
+---
+id: explanation-mvp-scope-context
+title: MVP Scope Context
+type: document
+subtype: explanation
+lifecycle: active
+status: accepted
+classification:
+  diataxis: explanation
+  sensitivity: public
+tags: [linkity, mvp, scope]
+---
+
 ## What “simple parser” vs “AST” really means here
 
 - Simple parser: You ingest text (Markdown, wiki syntax, raw URL strings) and output a flat (or lightly nested) list of link records: url, label/text, type, position (optional), maybe flags (external/internal).

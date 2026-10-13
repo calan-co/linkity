@@ -1,9 +1,14 @@
 ---
 # yaml-language-server: $schema=../schemas/document.frontmatter.schema.json
+id: explanation-tokenizers-parsers-ast-ir
 title: "Tokenizers, Parsers, AST & IR: Concepts and Roles in Linkity"
+type: document
+subtype: explanation
+lifecycle: active
+status: draft
 classification:
   diataxis: explanation
-status: draft
+  sensitivity: public
 tags: [architecture, concepts, tokenizers, parsers, ast, ir]
 ---
 
