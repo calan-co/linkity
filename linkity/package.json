@@ -49,8 +49,8 @@
     "docs:validate:relaxed": "npm run docs:validate -- --no-strict",
     "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate",
     "postinstall": "$(npm bin)/jsonschema-tools install-git-hook",
-    "generate:parsers": "peggy --format es --dts -o src/parsers/wikilink.generated.js src/parsers/wikilink.peggy",
-    "check:generated": "npm run generate:parsers && git diff --exit-code -- src/parsers/wikilink.generated.js src/parsers/wikilink.generated.d.ts"
+    "generate:parsers": "peggy --format es --dts -o src/parsers/wikilink.generated.js src/parsers/wikilink.peggy && peggy --format es --dts -o src/parsers/markdown.generated.js src/parsers/markdown.peggy && peggy --format es --dts -o src/parsers/url.generated.js src/parsers/url.peggy",
+    "check:generated": "npm run generate:parsers && git diff --exit-code -- src/parsers/*.generated.js src/parsers/*.generated.d.ts"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
