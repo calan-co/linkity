@@ -1,31 +1,9 @@
 // linkity/src/parsers/wikilink.ts
-// Wikilink parser ([[Page]] or [[Page|Alias]])
+// Wikilink parser ([[Page]], [[Page#Fragment]], or [[Page|Alias]])
 
 import type { LinkNode } from "../types/index.js";
+import { parse } from "./wikilink.generated.js";
 
-export function parseWikilink(_text: string): LinkNode[] {
-  // Match [[...]] even if preceded by a backslash
-  const regex = /\\?\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
-  const results: LinkNode[] = [];
-  let match;
-  while ((match = regex.exec(_text)) !== null) {
-    // match[0] may include a leading backslash
-    const full = match[0];
-    const value = match[1];
-    const alias = match[2];
-    if (typeof value === "string") {
-      results.push({
-        type: "wikilink",
-        value,
-        ...(alias ? { alias } : {}),
-        position: {
-          start: match.index,
-          end: alias
-            ? match.index + full.length - 1
-            : match.index + full.length,
-        },
-      });
-    }
-  }
-  return results;
+export function parseWikilink(text: string): LinkNode[] {
+  return parse(text) as LinkNode[];
 }
