@@ -168,7 +168,7 @@ function peg$parse(input, options) {
 
   const peg$e0 = peg$anyExpectation();
 
-  function peg$f0() {    return scanWikilinks(input);  }
+  function peg$f0(text) {    return scanWikilinks(text);  }
   let peg$currPos = options.peg$currPos | 0;
   let peg$savedPos = peg$currPos;
   const peg$posDetailsCache = [{ line: 1, column: 1 }];
@@ -340,29 +340,31 @@ function peg$parse(input, options) {
   }
 
   function peg$parseStart() {
-    let s0, s1, s2;
+    let s0, s1, s2, s3;
 
     s0 = peg$currPos;
-    s1 = [];
+    s1 = peg$currPos;
+    s2 = [];
     if (input.length > peg$currPos) {
-      s2 = input.charAt(peg$currPos);
+      s3 = input.charAt(peg$currPos);
       peg$currPos++;
     } else {
-      s2 = peg$FAILED;
+      s3 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e0); }
     }
-    while (s2 !== peg$FAILED) {
-      s1.push(s2);
+    while (s3 !== peg$FAILED) {
+      s2.push(s3);
       if (input.length > peg$currPos) {
-        s2 = input.charAt(peg$currPos);
+        s3 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
-        s2 = peg$FAILED;
+        s3 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$e0); }
       }
     }
+    s1 = input.substring(s1, peg$currPos);
     peg$savedPos = s0;
-    s1 = peg$f0();
+    s1 = peg$f0(s1);
     s0 = s1;
 
     return s0;
@@ -379,11 +381,11 @@ function peg$parse(input, options) {
     };
   }
 
-  function scanWikilinks(input) {
+  function scanWikilinks(text) {
     const links = [];
-    const re = /\\?\[\[(?:([^#|\]]+)(?:#([^|\]]+))?|#([^|\]]+))(?:\|([^\]]+))?\]\]/g;
+    const re = /\\?\[\[(?:([^#|\[\]]+)(?:#([^|\[\]]+))?|#([^|\[\]]+))(?:\|([^\[\]]+))?\]\]/g;
     let match;
-    while ((match = re.exec(input)) !== null) {
+    while ((match = re.exec(text)) !== null) {
       const alias = match[4];
       links.push(wikilink(
         match[1] || "",

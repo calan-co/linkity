@@ -9,11 +9,11 @@
     };
   }
 
-  function scanWikilinks(input) {
+  function scanWikilinks(text) {
     const links = [];
-    const re = /\\?\[\[(?:([^#|\]]+)(?:#([^|\]]+))?|#([^|\]]+))(?:\|([^\]]+))?\]\]/g;
+    const re = /\\?\[\[(?:([^#|\[\]]+)(?:#([^|\[\]]+))?|#([^|\[\]]+))(?:\|([^\[\]]+))?\]\]/g;
     let match;
-    while ((match = re.exec(input)) !== null) {
+    while ((match = re.exec(text)) !== null) {
       const alias = match[4];
       links.push(wikilink(
         match[1] || "",
@@ -30,4 +30,4 @@
 }
 
 Start
-  = .* { return scanWikilinks(input); }
+  = text:$(.*) { return scanWikilinks(text); }

@@ -5,6 +5,12 @@ const required = ["id", "title", "type", "subtype", "lifecycle", "status", "prio
 const dir = "backlog/tasks";
 let failures = 0;
 
+function hasScalar(frontmatter, field) {
+  const match = frontmatter.match(new RegExp(`^${field}:([^\\r\\n]*)`, "m"));
+  if (!match) return false;
+  return match[1].replace(/#.*/, "").trim().length > 0;
+}
+
 for (const file of readdirSync(dir).filter((name) => name.endsWith(".md"))) {
   const text = readFileSync(join(dir, file), "utf8");
   const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -15,7 +21,7 @@ for (const file of readdirSync(dir).filter((name) => name.endsWith(".md"))) {
   }
 
   for (const field of required) {
-    if (!new RegExp(`^${field}:[^\\S\\r\\n]*\\S`, "m").test(match[1])) {
+    if (!hasScalar(match[1], field)) {
       console.error(`${file}: missing ${field}`);
       failures++;
     }
