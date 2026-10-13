@@ -24,9 +24,7 @@
 }
 
 Start
-  = parts:(Url / Char)* {
-      return parts.filter(Boolean);
-    }
+  = Url
 
 Url
   = scheme:Scheme "://" rest:UrlRest {
@@ -38,8 +36,3 @@ Scheme
 
 UrlRest
   = $([A-Za-z0-9._~:/?#@!$&'()*+,;=%-]+)
-
-Char
-  = . {
-      return null;
-    }

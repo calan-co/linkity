@@ -174,16 +174,9 @@ function peg$parse(input, options) {
   const peg$e1 = peg$classExpectation([["A", "Z"], ["a", "z"]], false, false, false);
   const peg$e2 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], "+", ".", "-"], false, false, false);
   const peg$e3 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], ".", "_", "~", ":", "/", "?", "#", "@", "!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "=", "%", "-"], false, false, false);
-  const peg$e4 = peg$anyExpectation();
 
-  function peg$f0(parts) {
-    return parts.filter(Boolean);
-  }
-  function peg$f1(scheme, rest) {
+  function peg$f0(scheme, rest) {
     return urlNode(scheme, `${scheme}://${rest}`);
-  }
-  function peg$f2() {
-    return null;
   }
   let peg$currPos = options.peg$currPos | 0;
   let peg$savedPos = peg$currPos;
@@ -356,24 +349,9 @@ function peg$parse(input, options) {
   }
 
   function peg$parseStart() {
-    let s0, s1, s2;
+    let s0;
 
-    s0 = peg$currPos;
-    s1 = [];
-    s2 = peg$parseUrl();
-    if (s2 === peg$FAILED) {
-      s2 = peg$parseChar();
-    }
-    while (s2 !== peg$FAILED) {
-      s1.push(s2);
-      s2 = peg$parseUrl();
-      if (s2 === peg$FAILED) {
-        s2 = peg$parseChar();
-      }
-    }
-    peg$savedPos = s0;
-    s1 = peg$f0(s1);
-    s0 = s1;
+    s0 = peg$parseUrl();
 
     return s0;
   }
@@ -395,7 +373,7 @@ function peg$parse(input, options) {
         s3 = peg$parseUrlRest();
         if (s3 !== peg$FAILED) {
           peg$savedPos = s0;
-          s0 = peg$f1(s1, s3);
+          s0 = peg$f0(s1, s3);
         } else {
           peg$currPos = s0;
           s0 = peg$FAILED;
@@ -489,26 +467,6 @@ function peg$parse(input, options) {
     } else {
       s0 = s1;
     }
-
-    return s0;
-  }
-
-  function peg$parseChar() {
-    let s0, s1;
-
-    s0 = peg$currPos;
-    if (input.length > peg$currPos) {
-      s1 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$e4); }
-    }
-    if (s1 !== peg$FAILED) {
-      peg$savedPos = s0;
-      s1 = peg$f2();
-    }
-    s0 = s1;
 
     return s0;
   }

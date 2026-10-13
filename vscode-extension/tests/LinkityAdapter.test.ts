@@ -32,6 +32,18 @@ describe('LinkityAdapter', () => {
       expect(links[0].anchor).toBe('Section');
       expect(links[0].alias).toBe('Alias');
     });
+
+    it('reads anchors from the Linkity fragment field', () => {
+      const link = adapter.extractInfo({
+        type: 'wikilink',
+        value: 'Target',
+        fragment: 'Section',
+        position: { start: 0, end: 18 }
+      });
+
+      expect(link.value).toBe('Target');
+      expect(link.anchor).toBe('Section');
+    });
     
     it('finds link at position', () => {
       const text = 'Check [[Note]] here';

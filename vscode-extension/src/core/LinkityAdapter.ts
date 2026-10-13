@@ -20,12 +20,13 @@ export class LinkityAdapter {
    * Extract structured information from LinkNode
    */
   extractInfo(node: LinkNode): ParsedLink {
-    const { value, alias, position } = node;
+    const { value, alias, fragment, position } = node;
     
-    // Check if value contains anchor
+    // Prefer the structured fragment field from Linkity. Keep the legacy
+    // value-splitting fallback for older Linkity parser outputs.
     const anchorMatch = value.match(/^([^#]+)(?:#(.+))?$/);
-    const target = anchorMatch ? anchorMatch[1] : value;
-    const anchor = anchorMatch && anchorMatch[2] ? anchorMatch[2] : undefined;
+    const target = fragment ? value : anchorMatch ? anchorMatch[1] : value;
+    const anchor = fragment ?? (anchorMatch && anchorMatch[2] ? anchorMatch[2] : undefined);
     
     return {
       value: target,

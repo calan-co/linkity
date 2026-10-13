@@ -25,6 +25,9 @@ Wikilink
   = "\\"? "[[" value:Target fragment:Fragment? alias:Alias? "]]" {
       return wikilink(value, fragment, alias);
     }
+  / "\\"? "[[" fragment:Fragment alias:Alias? "]]" {
+      return wikilink("", fragment, alias);
+    }
 
 Target
   = $((![#|\]] .)+)
