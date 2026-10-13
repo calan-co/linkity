@@ -8,7 +8,7 @@ const defaultSchemes = ["http", "https"];
 const defaultSchemeSet = new Set(defaultSchemes);
 const urlCandidatePattern = /\b[A-Za-z][A-Za-z0-9+.-]*:\/\/[A-Za-z0-9._~:/?#@!$&'()*+,;=%\-[\]]+/g;
 
-type ParsedUrlNode = Omit<LinkNode, "type"> & { scheme?: string };
+type ParsedUrlNode = Omit<LinkNode, "type"> & { invalid?: boolean; scheme?: string };
 
 export function parseRawUrl(text: string, customSchemes: string[] = []): LinkNode[] {
   const allSchemes = new Set([...defaultSchemes, ...customSchemes].map((scheme) => scheme.toLowerCase()));
@@ -18,7 +18,7 @@ export function parseRawUrl(text: string, customSchemes: string[] = []): LinkNod
   while ((match = urlCandidatePattern.exec(text)) !== null) {
     const candidate = match[0];
     const parsed = parse(candidate) as ParsedUrlNode;
-    if (typeof parsed.scheme !== "string") continue;
+    if (parsed.invalid || typeof parsed.scheme !== "string") continue;
     const normalizedScheme = parsed.scheme.toLowerCase();
     if (!allSchemes.has(normalizedScheme)) continue;
     const { position, ...node } = parsed;
