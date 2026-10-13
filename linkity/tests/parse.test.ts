@@ -31,6 +31,23 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should parse wikilink fragments with aliases and source offsets", () => {
+    const result = parseLinks("See [[Guide#Intro|read this]]", {
+      enableWikilink: true,
+      enableMarkdown: false,
+      enableUrl: false,
+    });
+    expect(result).toEqual([
+      {
+        type: "wikilink",
+        value: "Guide",
+        fragment: "Intro",
+        alias: "read this",
+        position: { start: 4, end: 28 },
+      },
+    ]);
+  });
+
   it("should parse markdown links when enabled", () => {
     const result = parseLinks("Check [link](https://example.com)", {
       enableWikilink: false,

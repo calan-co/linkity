@@ -28,6 +28,8 @@ export interface LinkNode {
   value: string;
   /** Optional alias or display text */
   alias?: string;
+  /** Optional fragment/anchor target */
+  fragment?: string;
   /** Parsed URL (if available) */
   url?: string;
   /** Character offsets in original string */

@@ -48,7 +48,9 @@
     "docs:validate": "doc-vader validate",
     "docs:validate:relaxed": "npm run docs:validate -- --no-strict",
     "precommit": "npm run typecheck && npm test && npm run lint:code && npm run lint:md && npm run docs:validate",
-    "postinstall": "$(npm bin)/jsonschema-tools install-git-hook"
+    "postinstall": "$(npm bin)/jsonschema-tools install-git-hook",
+    "generate:parsers": "peggy --format es --dts -o src/parsers/wikilink.generated.js src/parsers/wikilink.peggy",
+    "check:generated": "npm run generate:parsers && git diff --exit-code -- src/parsers/wikilink.generated.js src/parsers/wikilink.generated.d.ts"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
@@ -63,6 +65,7 @@
     "eslint-config-prettier": "^9.1.0",
     "markdownlint-cli": "^0.41.0",
     "memfs": "^4.50.0",
+    "peggy": "^5.1.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.10"
