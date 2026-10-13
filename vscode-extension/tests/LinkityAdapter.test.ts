@@ -45,6 +45,21 @@ describe('LinkityAdapter', () => {
       expect(link.anchor).toBe('Section');
     });
     
+    it('resolves same-document anchors to the current document', async () => {
+      const sourceFileUri = { fsPath: '/notes/current.md' };
+      const resolver = {
+        resolve: () => ({ fsPath: '/notes/wrong.md' }),
+        resolveWithAnchorAsync: async () => ({ uri: { fsPath: '/notes/wrong.md' } })
+      };
+      const link = { value: '', anchor: 'Section', start: 0, end: 12 };
+
+      expect(adapter.resolveLink(link, resolver, { sourceFileUri })).toBe(sourceFileUri);
+      await expect(adapter.resolveLinkWithAnchor(link, resolver, { sourceFileUri })).resolves.toEqual({
+        uri: sourceFileUri,
+        anchor: 'Section'
+      });
+    });
+
     it('finds link at position', () => {
       const text = 'Check [[Note]] here';
       const link = adapter.findLinkAtPosition(text, 8); // Inside [[Note]]

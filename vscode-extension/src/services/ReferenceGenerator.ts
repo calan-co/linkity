@@ -58,7 +58,7 @@ export class ReferenceGenerator {
     const seen = new Set<string>();
     
     for (const link of links) {
-      const uri = this.resolver.resolve(link.value, { sourceFileUri: sourceUri });
+      const uri = this.adapter.resolveLink(link, this.resolver, { sourceFileUri: sourceUri });
       if (!uri) {
         continue;
       }

@@ -8,6 +8,23 @@ export interface ParsedLink {
   end: number;
 }
 
+interface ResolveOptions<TUri> {
+  sourceFileUri?: TUri;
+  strategy?: string;
+}
+
+interface SyncResolver<TUri> {
+  resolve(target: string, options?: ResolveOptions<TUri>): TUri | null;
+}
+
+interface AsyncAnchorResolver<TUri> {
+  resolveWithAnchorAsync(
+    target: string,
+    anchor: string | undefined,
+    options?: ResolveOptions<TUri>
+  ): Promise<{ uri: TUri | null; anchor?: string }>;
+}
+
 export class LinkityAdapter {
   /**
    * Parse all wikilinks from markdown text
@@ -51,5 +68,27 @@ export class LinkityAdapter {
   findLinkAtPosition(text: string, offset: number): ParsedLink | null {
     const links = this.extractAll(text);
     return links.find(link => offset >= link.start && offset <= link.end) || null;
+  }
+
+  resolveLink<TUri>(
+    link: ParsedLink,
+    resolver: SyncResolver<TUri>,
+    options: ResolveOptions<TUri> = {}
+  ): TUri | null {
+    if (!link.value && link.anchor && options.sourceFileUri) {
+      return options.sourceFileUri;
+    }
+    return resolver.resolve(link.value, options);
+  }
+
+  async resolveLinkWithAnchor<TUri>(
+    link: ParsedLink,
+    resolver: AsyncAnchorResolver<TUri>,
+    options: ResolveOptions<TUri> = {}
+  ): Promise<{ uri: TUri | null; anchor?: string }> {
+    if (!link.value && link.anchor && options.sourceFileUri) {
+      return { uri: options.sourceFileUri, anchor: link.anchor };
+    }
+    return resolver.resolveWithAnchorAsync(link.value, link.anchor, options);
   }
 }

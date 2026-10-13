@@ -33,7 +33,7 @@ export class WikilinkDocumentLinkProvider implements vscode.DocumentLinkProvider
       
       const strategy = this.config.getLinkResolution();
       const resolvedStrategy = strategy === 'interactive' ? 'mostSpecific' : strategy;
-      const uri = this.resolver.resolve(link.value, {
+      const uri = this.adapter.resolveLink(link, this.resolver, {
         sourceFileUri: document.uri,
         strategy: resolvedStrategy
       });

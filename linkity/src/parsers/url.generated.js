@@ -168,12 +168,12 @@ function peg$parse(input, options) {
 
   const peg$r0 = /^[A-Za-z]/;
   const peg$r1 = /^[A-Za-z0-9+.\-]/;
-  const peg$r2 = /^[A-Za-z0-9._~:\/?#@!$&'()*+,;=%\-]/;
+  const peg$r2 = /^[A-Za-z0-9._~:\/?#@!$&'()*+,;=%\-[\]]/;
 
   const peg$e0 = peg$literalExpectation("://", false);
   const peg$e1 = peg$classExpectation([["A", "Z"], ["a", "z"]], false, false, false);
   const peg$e2 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], "+", ".", "-"], false, false, false);
-  const peg$e3 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], ".", "_", "~", ":", "/", "?", "#", "@", "!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "=", "%", "-"], false, false, false);
+  const peg$e3 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], ".", "_", "~", ":", "/", "?", "#", "@", "!", "$", "&", "'", "(", ")", "*", "+", ",", ";", "=", "%", "-", "[", "]"], false, false, false);
 
   function peg$f0(scheme, rest) {
     return urlNode(scheme, `${scheme}://${rest}`);

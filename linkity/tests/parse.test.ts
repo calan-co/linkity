@@ -130,8 +130,40 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should parse bracketed IPv6 hosts", () => {
+    const result = parseLinks("Open https://[::1]/docs", {
+      enableWikilink: false,
+      enableMarkdown: false,
+      enableUrl: true,
+    });
+    expect(result).toEqual([
+      {
+        type: "url",
+        value: "https://[::1]/docs",
+        url: "https://[::1]/docs",
+        position: { start: 5, end: 23 },
+      },
+    ]);
+  });
+
+  it("should preserve URL scheme casing but compare schemes case-insensitively", () => {
+    const result = parseLinks("Visit HTTPS://example.com", {
+      enableWikilink: false,
+      enableMarkdown: false,
+      enableUrl: true,
+    });
+    expect(result).toEqual([
+      {
+        type: "url",
+        value: "HTTPS://example.com",
+        url: "HTTPS://example.com",
+        position: { start: 6, end: 25 },
+      },
+    ]);
+  });
+
   it("should parse configured custom schemes", () => {
-    const result = parseLinks("Open obsidian://open?vault=docs", {
+    const result = parseLinks("Open Obsidian://open?vault=docs", {
       enableWikilink: false,
       enableMarkdown: false,
       enableUrl: true,
@@ -140,8 +172,8 @@ describe("parseLinks", () => {
     expect(result).toEqual([
       {
         type: "custom",
-        value: "obsidian://open?vault=docs",
-        url: "obsidian://open?vault=docs",
+        value: "Obsidian://open?vault=docs",
+        url: "Obsidian://open?vault=docs",
         position: { start: 5, end: 31 },
       },
     ]);
@@ -219,7 +251,8 @@ describe("detectLinkType", () => {
 
   it("should detect url type", () => {
     expect(detectLinkType("https://foo.com")).toBe("url");
-    expect(detectLinkType("http://bar.com")).toBe("url");
+    expect(detectLinkType("HTTP://bar.com")).toBe("url");
+    expect(detectLinkType("https://[::1]/docs")).toBe("url");
   });
 
   it("should detect custom scheme type", () => {

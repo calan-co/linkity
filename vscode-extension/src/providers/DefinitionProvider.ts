@@ -29,7 +29,7 @@ export class WikilinkDefinitionProvider implements vscode.DefinitionProvider {
     }
     
     // Resolve the link
-    const result = await this.resolver.resolveWithAnchorAsync(link.value, link.anchor, {
+    const result = await this.adapter.resolveLinkWithAnchor(link, this.resolver, {
       sourceFileUri: document.uri,
       strategy: this.config.getLinkResolution()
     });

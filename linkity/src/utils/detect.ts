@@ -31,5 +31,6 @@ export function detectLinkType(str: string): LinkType | null {
 
   const urlNode = parseWholeUrl(str);
   if (!urlNode?.scheme) return null;
-  return urlNode.scheme === "http" || urlNode.scheme === "https" ? "url" : "custom";
+  const scheme = urlNode.scheme.toLowerCase();
+  return scheme === "http" || scheme === "https" ? "url" : "custom";
 }

@@ -46,7 +46,7 @@ export class BacklinksIndex {
       const links = this.adapter.extractAll(text);
       
       for (const link of links) {
-        const targetUri = this.resolver.resolve(link.value, {
+        const targetUri = this.adapter.resolveLink(link, this.resolver, {
           sourceFileUri: sourceUri
         });
         
