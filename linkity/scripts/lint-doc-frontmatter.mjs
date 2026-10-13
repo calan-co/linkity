@@ -25,7 +25,9 @@ for (const file of files) {
   }
 
   for (const field of required) {
-    if (!new RegExp(`^${field}:\\s*\\S`, "m").test(match[1])) {
+    const hasValue = new RegExp(`^${field}:[^\\S\\r\\n]*\\S`, "m").test(match[1]);
+    const hasMapping = new RegExp(`^${field}:[^\\S\\r\\n]*(?:\\r?\\n[ \\t]+\\S)`, "m").test(match[1]);
+    if (!hasValue && !hasMapping) {
       console.error(`${file}: missing ${field}`);
       failures++;
     }

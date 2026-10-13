@@ -15,7 +15,7 @@ for (const file of readdirSync(dir).filter((name) => name.endsWith(".md"))) {
   }
 
   for (const field of required) {
-    if (!new RegExp(`^${field}:\\s*\\S`, "m").test(match[1])) {
+    if (!new RegExp(`^${field}:[^\\S\\r\\n]*\\S`, "m").test(match[1])) {
       console.error(`${file}: missing ${field}`);
       failures++;
     }
