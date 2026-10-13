@@ -1,48 +1,33 @@
 {
-  function wikilink(value, fragment, alias) {
-    const loc = location();
+  function wikilink(value, fragment, alias, start, end) {
     return {
       type: "wikilink",
       value,
       ...(fragment ? { fragment } : {}),
       ...(alias ? { alias } : {}),
-      position: {
-        start: loc.start.offset,
+      position: { start, end },
+    };
+  }
+
+  function scanWikilinks(input) {
+    const links = [];
+    const re = /\\?\[\[(?:([^#|\]]+)(?:#([^|\]]+))?|#([^|\]]+))(?:\|([^\]]+))?\]\]/g;
+    let match;
+    while ((match = re.exec(input)) !== null) {
+      const alias = match[4];
+      links.push(wikilink(
+        match[1] || "",
+        match[2] || match[3],
+        alias,
+        match.index,
         // Preserve the historical Linkity offset contract: plain wikilinks use
         // an exclusive end, aliased wikilinks use the closing bracket offset.
-        end: alias ? loc.end.offset - 1 : loc.end.offset,
-      },
-    };
+        alias ? match.index + match[0].length - 1 : match.index + match[0].length,
+      ));
+    }
+    return links;
   }
 }
 
 Start
-  = parts:(Wikilink / Char)* {
-      return parts.filter(Boolean);
-    }
-
-Wikilink
-  = "\\"? "[[" value:Target fragment:Fragment? alias:Alias? "]]" {
-      return wikilink(value, fragment, alias);
-    }
-  / "\\"? "[[" fragment:Fragment alias:Alias? "]]" {
-      return wikilink("", fragment, alias);
-    }
-
-Target
-  = $((![#|\]] .)+)
-
-Fragment
-  = "#" value:$((![|\]] .)+) {
-      return value;
-    }
-
-Alias
-  = "|" value:$((!"]" .)+) {
-      return value;
-    }
-
-Char
-  = . {
-      return null;
-    }
+  = .* { return scanWikilinks(input); }
