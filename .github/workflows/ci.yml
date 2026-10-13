@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --package-lock=false
+      - run: npm ci
         working-directory: linkity
 
   lint:
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --package-lock=false
+      - run: npm ci
         working-directory: linkity
       - run: npm run lint:code && npm run lint:md
         working-directory: linkity
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --package-lock=false
+      - run: npm ci
         working-directory: linkity
       - run: npm run typecheck
         working-directory: linkity
@@ -93,7 +93,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install --package-lock=false
+      - run: npm ci
         working-directory: linkity
       - run: npm test
         working-directory: linkity
@@ -106,7 +106,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --package-lock=false
+      - run: npm ci
         working-directory: linkity
       - run: npm run check:generated
         working-directory: linkity
