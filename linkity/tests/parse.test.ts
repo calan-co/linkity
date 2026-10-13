@@ -64,6 +64,23 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("should parse markdown fragments with source offsets", () => {
+    const result = parseLinks("Go [Intro](./guide.md#intro)", {
+      enableWikilink: false,
+      enableMarkdown: true,
+      enableUrl: false,
+    });
+    expect(result).toEqual([
+      {
+        type: "markdown",
+        value: "Intro",
+        url: "./guide.md#intro",
+        fragment: "intro",
+        position: { start: 3, end: 27 },
+      },
+    ]);
+  });
+
   it("should parse raw URLs when enabled", () => {
     const result = parseLinks("Visit https://example.com for more", {
       enableWikilink: false,
@@ -76,6 +93,40 @@ describe("parseLinks", () => {
         value: "https://example.com",
         url: "https://example.com",
         position: { start: 6, end: 25 },
+      },
+    ]);
+  });
+
+  it("should parse raw URL fragments and trim trailing punctuation", () => {
+    const result = parseLinks("Visit https://example.com/docs#intro.", {
+      enableWikilink: false,
+      enableMarkdown: false,
+      enableUrl: true,
+    });
+    expect(result).toEqual([
+      {
+        type: "url",
+        value: "https://example.com/docs#intro",
+        url: "https://example.com/docs#intro",
+        fragment: "intro",
+        position: { start: 6, end: 36 },
+      },
+    ]);
+  });
+
+  it("should parse configured custom schemes", () => {
+    const result = parseLinks("Open obsidian://open?vault=docs", {
+      enableWikilink: false,
+      enableMarkdown: false,
+      enableUrl: true,
+      customSchemes: ["obsidian"],
+    });
+    expect(result).toEqual([
+      {
+        type: "custom",
+        value: "obsidian://open?vault=docs",
+        url: "obsidian://open?vault=docs",
+        position: { start: 5, end: 31 },
       },
     ]);
   });

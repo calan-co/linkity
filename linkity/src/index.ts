@@ -97,7 +97,7 @@ export function parseLinks(
       results.push(...nodes);
     }
     if (enableUrl) {
-      const nodes = parseRawUrl(slice).map((n) =>
+      const nodes = parseRawUrl(slice, options?.customSchemes).map((n) =>
         n.position
           ? {
               ...n,
