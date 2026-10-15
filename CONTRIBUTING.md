@@ -16,7 +16,7 @@ tags: [linkity, contributing, development]
 
 ### Prerequisites
 
-- Node.js >= 18
+- Node.js >= 22
 - pnpm 11.9.0
 
 ### Quick Start

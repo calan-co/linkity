@@ -15,7 +15,7 @@
     "url": "https://github.com/your-org/linkity/issues"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "sideEffects": false,
   "files": [
@@ -48,7 +48,7 @@
     "lint:md": "markdownlint --ignore node_modules --ignore docs/transcripts --ignore AGENTS.md --ignore backlog/todo.md --ignore docs/explanation/mvp-scope-context.md .",
     "docs:validate": "doc-vader validate",
     "docs:validate:relaxed": "pnpm docs:validate",
-    "precommit": "pnpm hooks:pre-push",
+    "precommit": "pnpm hooks:pre-commit",
     "docs:lint": "pnpm docs:validate",
     "backlog:validate": "pnpm backlog:doc-vader backlog validate --dir backlog --fail-on error",
     "backlog:validate:ci": "pnpm backlog:validate",

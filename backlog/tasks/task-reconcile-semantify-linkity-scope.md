@@ -22,10 +22,9 @@ links:
 
 ## Overview
 
-Revise Linkity implementation and docs so Linkity owns a layered reference
-normalization product: the syntax layer emits `LinkOccurrence` observations, and
-Linkity-owned Semantify profiles perform canonical reference normalization and
-generation internally.
+Keep Linkity scoped to single-link syntax parsing and rendering through `Ast` and
+`Syntax`. Semantify integration is deferred from the MVP; repository traversal,
+graph policy, and governance stay with consuming systems.
 
 ## Checklist
 

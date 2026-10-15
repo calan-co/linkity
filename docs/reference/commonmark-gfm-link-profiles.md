@@ -1,4 +1,15 @@
-# CommonMark and GFM Link Profiles
+---
+id: commonmark-gfm-link-profiles
+title: CommonMark and GFM Link Profiles
+type: document
+subtype: reference
+lifecycle: active
+status: accepted
+classification:
+  diataxis: reference
+  sensitivity: public
+tags: [commonmark, gfm, links, syntax]
+---
 
 Linkity has two distinct Markdown profiles:
 
