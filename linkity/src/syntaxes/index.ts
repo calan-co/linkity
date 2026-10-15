@@ -302,7 +302,17 @@ function candidateEnd(input: string, start: number): number | undefined {
     return close < 0 ? undefined : close + 1;
   }
   if (input[start] !== "[") return undefined;
-  const close = input.indexOf("]", start + 1);
+  let close = -1;
+  let labelDepth = 0;
+  for (let index = start + 1; index < input.length; index++) {
+    const char = input[index];
+    if (char === "\\") { index++; continue; }
+    if (char === "[") labelDepth++;
+    else if (char === "]") {
+      if (labelDepth === 0) { close = index; break; }
+      labelDepth--;
+    }
+  }
   if (close < 0) return undefined;
   if (input[close + 1] === "[") {
     const referenceEnd = input.indexOf("]", close + 2);
@@ -410,7 +420,7 @@ function renderMarkdown(ast: Ast, syntax: Syntax, context?: RenderContext): Rend
   }
   if (ast.provenance?.rule === "autolink") return result(syntax, ast, `<${ast.label?.raw ?? target}>`, context);
   if (ast.provenance?.rule === "extended-autolink") return result(syntax, ast, ast.label?.raw ?? target, context);
-  const title = ast.title ? ` "${ast.title}"` : "";
+  const title = ast.title ? ` "${ast.title.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"` : "";
   const destination = /[\s()<>]/.test(target) ? `<${target}>` : target;
   return result(syntax, ast, `[${label}](${destination}${title})`, context);
 }
