@@ -88,3 +88,11 @@ describe("link grammar boundaries", () => {
     expect(performance.now() - start).toBeLessThan(100);
   });
 });
+
+describe("URL query parsing", () => {
+  it("keeps malformed escapes literal and preserves equals signs in values", () => {
+    expect(gfmSyntax.parse("[search](https://example.com/?q=a=b&bad=%)")).toMatchObject({
+      query: { q: "a=b", bad: "%" },
+    });
+  });
+});

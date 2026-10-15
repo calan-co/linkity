@@ -20,12 +20,21 @@ function spanFrom(match: RegExpExecArray): Match {
 
 function parseQuery(input: string): Ast["query"] | undefined {
   if (!input) return undefined;
+  const decode = (value: string): string => {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
   const query: NonNullable<Ast["query"]> = {};
   for (const part of input.split("&").filter(Boolean)) {
-    const [rawKey, rawValue] = part.split("=");
+    const separator = part.indexOf("=");
+    const rawKey = separator < 0 ? part : part.slice(0, separator);
+    const rawValue = separator < 0 ? undefined : part.slice(separator + 1);
     if (!rawKey) continue;
-    const key = decodeURIComponent(rawKey);
-    const value = rawValue === undefined ? true : decodeURIComponent(rawValue);
+    const key = decode(rawKey);
+    const value = rawValue === undefined ? true : decode(rawValue);
     const existing = query[key];
     if (existing === undefined) query[key] = value;
     else query[key] = Array.isArray(existing) ? [...existing, String(value)] : [String(existing), String(value)];
