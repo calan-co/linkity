@@ -9,6 +9,8 @@ export default [
       "node_modules/**",
       "src/**/*.generated.js",
       "src/**/*.generated.d.ts",
+      "src/syntaxes/generated/**",
+      "scripts/generate-link-grammars.mjs",
       "**/*.d.ts",
       ".eslintrc.cjs",
     ],
@@ -31,6 +33,7 @@ export default [
     },
     rules: {
       "no-console": "off",
+      "no-useless-escape": "off",
     },
   },
   {
