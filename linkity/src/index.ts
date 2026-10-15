@@ -3,7 +3,7 @@
 // Supports: Obsidian wikilink ([[Page]]), GFM [text](url), raw URLs, and extensible schemes
 
 // Re-export types
-export type { LinkType, LinkNode, LinkityParseOptions } from "./types/index.js";
+export type { LinkType, LinkNode, LinkityParseOptions, Ast, Syntax, ParseContext, RenderContext, RenderResult, Feature, Match } from "./types/index.js";
 
 // Re-export parsers
 export {
@@ -14,6 +14,7 @@ export {
 
 // Re-export utilities
 export { detectLinkType, visitLinks } from "./utils/index.js";
+export { commonmarkSyntax, gfmSyntax, obsidianSyntax, wikilinkSyntax, urlSyntax, createSyntaxRegistry, getSyntax, parseLink, registerSyntax, renderLink, syntaxes } from "./syntaxes/index.js";
 
 // Main API
 import type { LinkNode, LinkityParseOptions } from "./types/index.js";
