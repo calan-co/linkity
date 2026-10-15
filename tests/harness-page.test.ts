@@ -53,6 +53,14 @@ describe("harness page", () => {
     expect(html).not.toContain('id="custom-render"');
   });
 
+  it("creates profile options as DOM nodes rather than interpolating profile IDs", async () => {
+    const { readFileSync } = await vi.importActual<typeof import("node:fs")>("node:fs");
+    const html = readFileSync("examples/harness.html", "utf8");
+
+    expect(html).toContain("replaceChildren");
+    expect(html).not.toContain('profile-options").innerHTML');
+  });
+
   it("offers feature multi-select and PEG authoring help", async () => {
     const { readFileSync } = await vi.importActual<typeof import("node:fs")>("node:fs");
     const html = readFileSync("examples/harness.html", "utf8");

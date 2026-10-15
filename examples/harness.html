@@ -92,13 +92,14 @@
       const syntax = (id) => syntaxes.get($(id).value);
 
       function refreshSelects() {
+        const names = [...syntaxes.keys()];
         for (const id of ["validate-syntax", "to-syntax"]) {
           const current = $(id).value;
-          $(id).innerHTML = [...syntaxes.keys()].map((name) => `<option${name === "obsidian" && id === "validate-syntax" ? " selected" : ""}>${name}</option>`).join("");
+          $(id).replaceChildren(...names.map((name) => new Option(name, name, false, name === "obsidian" && id === "validate-syntax")));
           if (current) $(id).value = current;
         }
-        $("profile-options").innerHTML = [...syntaxes.keys()].map((name) => `<option value="${name}"></option>`).join("");
-        $("custom-supports").innerHTML = AVAILABLE_FEATURES.map((feature) => `<option value="${feature}">${feature}</option>`).join("");
+        $("profile-options").replaceChildren(...names.map((name) => new Option("", name)));
+        $("custom-supports").replaceChildren(...AVAILABLE_FEATURES.map((feature) => new Option(feature, feature)));
         $("peg-keywords").textContent = PEG_KEYWORDS.join(", ");
         $("peg-components").textContent = PEG_COMPONENTS.join(", ");
         $("validate-syntax").value ||= "obsidian";
@@ -157,16 +158,20 @@
       }
 
       $("custom-register").onclick = () => {
-        const custom = createCustomSyntax({
-          id: $("profile-id").value,
-          supports: selectedSupports(),
-          pegSource: $("custom-peg").value,
-        });
-        syntaxes.set(custom.id, custom);
-        refreshSelects();
-        $("profile-id").value = custom.id;
-        updateValidation();
-        $("custom-output").textContent = `Saved ${custom.id}`;
+        try {
+          const custom = createCustomSyntax({
+            id: $("profile-id").value,
+            supports: selectedSupports(),
+            pegSource: $("custom-peg").value,
+          });
+          syntaxes.set(custom.id, custom);
+          refreshSelects();
+          $("profile-id").value = custom.id;
+          updateValidation();
+          $("custom-output").textContent = `Saved ${custom.id}`;
+        } catch (error) {
+          $("custom-output").textContent = error instanceof Error ? error.message : String(error);
+        }
       };
 
       refreshSelects();
