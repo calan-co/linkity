@@ -37,7 +37,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup --clean",
+    "generate:grammars": "node scripts/generate-link-grammars.mjs",
+    "build": "pnpm generate:grammars && tsup --clean",
     "dev": "tsup --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
@@ -68,6 +69,7 @@
     "eslint-config-prettier": "^9.1.0",
     "markdownlint-cli": "^0.41.0",
     "memfs": "^4.50.0",
+    "peggy": "^5.1.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.10"

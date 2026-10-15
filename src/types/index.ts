@@ -1,6 +1,8 @@
 export type LegacyLinkType = "wikilink" | "markdown" | "url" | "custom";
 export type Feature =
   | "alias"
+  | "title"
+  | "reference"
   | "anchor"
   | "block"
   | "embed"
@@ -39,6 +41,11 @@ export interface Ast {
     raw: string;
     semantic?: "literal" | "implicit" | "empty";
   };
+  title?: string;
+  reference?: {
+    label: string;
+    style: "full" | "collapsed" | "shortcut";
+  };
   embed?: boolean;
   provenance?: Provenance;
 }
@@ -67,9 +74,16 @@ export interface FileIndex {
   resolvePath?: (target: string, sourcePath?: string) => string | undefined;
 }
 
+export interface ReferenceDefinition {
+  destination: string;
+  title?: string;
+}
+
 export interface ParseContext {
   sourcePath?: string;
   fileIndex?: FileIndex;
+  /** CommonMark reference definitions, keyed by their source label. */
+  referenceDefinitions?: Record<string, ReferenceDefinition>;
 }
 
 export interface RenderContext {
@@ -87,6 +101,7 @@ export interface MatchOptions {
 
 export interface ParseOptions {
   enableWikilink?: boolean;
+  referenceDefinitions?: Record<string, ReferenceDefinition>;
   enableMarkdown?: boolean;
   enableUrl?: boolean;
   customSchemes?: string[];

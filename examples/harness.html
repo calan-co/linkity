@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Linkity Syntax Harness</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+      header, main { max-width: 1100px; margin: auto; padding: 1rem; }
+      .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+      section { background: #111827; border: 1px solid #334155; border-radius: 12px; padding: 1rem; }
+      textarea, label { width: 100%; box-sizing: border-box; margin: .35rem 0 .75rem; }
+      textarea, input, select { background: #020617; color: #e2e8f0; border: 1px solid #475569; border-radius: 8px; padding: .55rem; }
+      textarea { min-height: 7rem; font-family: ui-monospace, monospace; }
+      button { border: 0; border-radius: 8px; padding: .7rem; background: #38bdf8; color: #082f49; font-weight: 700; }
+      pre { white-space: pre-wrap; background: #020617; border-radius: 8px; padding: .75rem; overflow: auto; }
+      #validation-indicator { display: inline-block; width: 1.5rem; text-align: center; cursor: help; }
+      .input-row { display: grid; grid-template-columns: 1fr auto; gap: .35rem; align-items: center; }
+      pre { display: none; }
+      label>span { border: 0; clip: rect(0 0 0 0); clip-path: inset(50%); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+      #validate-panel label input, .input-row { display: flex; flex-grow: 1 }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Linkity Syntax Harness</h1>
+      <p>Validate one link, translate between syntaxes, or prototype a new syntax profile.</p>
+    </header>
+    <main class="grid">
+      <section id="validate-panel">
+        <h2>Validate</h2>
+        <label>
+          <span>Syntax profile</span>
+          <select id="validate-syntax"><option selected>obsidian</option></select>
+        </label>
+        <label>
+          <span>Link input</span>
+          <div class="input-row">
+            <input id="validate-input" value="[[docs/Page.md|Page]]" />
+            <span id="validation-indicator" aria-live="polite" title="Valid">✓</span>
+          </div>
+        </label>
+        <pre id="validate-output"></pre>
+        <details id="translate-section">
+          <summary>Translate</summary>
+          <label>
+            <span>Target syntax</span>
+            <select id="to-syntax"></select>
+          </label>
+          <label>
+            <span>Translated link</span>
+            <input id="translated-link" readonly />
+          </label>
+          <pre id="translate-output"></pre>
+        </details>
+      </section>
+
+      <section id="profile-panel">
+        <h2>Custom Profile Lab</h2>
+        <label class="visually-hidden" for="profile-id">
+          <span>Profile id or existing profile</span>
+          <input id="profile-id" list="profile-options" value="obsidian" />
+        </label>
+        <datalist id="profile-options"></datalist>
+        <label class="visually-hidden" for="custom-supports">
+          <span>Supports</span>
+        </label>
+        <select id="custom-supports" multiple></select>
+        <label>
+          <span>Simplified PEG</span>
+          <textarea id="custom-peg">
+            match "&lt;" label "&gt;" render "&lt;" label "&gt;"
+          </textarea>
+        </label>
+        <pre id="peg-highlight" aria-hidden="true"></pre>
+        <details id="peg-reference">
+          <summary>PEG keywords and components</summary>
+          <p>Keywords: <code id="peg-keywords"></code></p>
+          <p>Components: <code id="peg-components"></code></p>
+          <p>Use quoted literals plus components. Example: <code>match "[[" target "|" label "]]"</code></p>
+        </details>
+        <button id="custom-register">Save syntax profile</button>
+        <pre id="custom-output"></pre>
+      </section>
+    </main>
+    <script type="module">
+      import { AVAILABLE_FEATURES, PEG_COMPONENTS, PEG_KEYWORDS, builtInSyntaxes, convertLink, createCustomSyntax, syntaxToSource, validateLink } from "./harness-core.mjs";
+
+      const syntaxes = new Map(builtInSyntaxes.map((syntax) => [syntax.id, syntax]));
+      const $ = (id) => document.getElementById(id);
+      const pretty = (value) => JSON.stringify(value, null, 2);
+      const syntax = (id) => syntaxes.get($(id).value);
+
+      function refreshSelects() {
+        for (const id of ["validate-syntax", "to-syntax"]) {
+          const current = $(id).value;
+          $(id).innerHTML = [...syntaxes.keys()].map((name) => `<option${name === "obsidian" && id === "validate-syntax" ? " selected" : ""}>${name}</option>`).join("");
+          if (current) $(id).value = current;
+        }
+        $("profile-options").innerHTML = [...syntaxes.keys()].map((name) => `<option value="${name}"></option>`).join("");
+        $("custom-supports").innerHTML = AVAILABLE_FEATURES.map((feature) => `<option value="${feature}">${feature}</option>`).join("");
+        $("peg-keywords").textContent = PEG_KEYWORDS.join(", ");
+        $("peg-components").textContent = PEG_COMPONENTS.join(", ");
+        $("validate-syntax").value ||= "obsidian";
+        $("to-syntax").value ||= "gfm";
+      }
+
+      function humanError(result) {
+        if (result.ok) return "Valid";
+        return result.error ?? result.diagnostics?.map((diagnostic) => diagnostic.message).join("; ") ?? "Invalid link";
+      }
+
+      function updateTranslation(result) {
+        if (!$("translate-section").open || !result.ok) {
+          $("translated-link").value = "";
+          $("translate-output").textContent = result.ok ? "Expand to translate." : "Fix validation errors first.";
+          return;
+        }
+        const converted = convertLink($("validate-input").value, syntax("validate-syntax"), syntax("to-syntax"));
+        $("translated-link").value = converted.value ?? "";
+        $("translate-output").textContent = pretty(converted);
+      }
+
+      function updateValidation() {
+        const result = validateLink($("validate-input").value, syntax("validate-syntax"));
+        $("validation-indicator").textContent = result.ok ? "✓" : "⚠";
+        $("validation-indicator").title = result.ok ? "Valid" : humanError(result);
+        $("validate-output").textContent = pretty(result);
+        updateTranslation(result);
+      }
+
+      function selectedSupports() {
+        return [...$("custom-supports").selectedOptions].map((option) => option.value);
+      }
+
+      function setSelectedSupports(features) {
+        for (const option of $("custom-supports").options) option.selected = features.includes(option.value);
+      }
+
+      function highlightPeg() {
+        $("peg-highlight").innerHTML = $("custom-peg").value
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\b(match|render)\b/g, "<strong>$1</strong>")
+          .replace(/\b(target|label)\b/g, "<em>$1</em>");
+      }
+
+      function loadProfileEditor() {
+        const existing = syntaxes.get($("profile-id").value);
+        if (!existing) return;
+        const source = syntaxToSource(existing);
+        $("profile-id").value = source.id;
+        setSelectedSupports(source.supports);
+        $("custom-peg").value = source.pegSource;
+        highlightPeg();
+      }
+
+      $("custom-register").onclick = () => {
+        const custom = createCustomSyntax({
+          id: $("profile-id").value,
+          supports: selectedSupports(),
+          pegSource: $("custom-peg").value,
+        });
+        syntaxes.set(custom.id, custom);
+        refreshSelects();
+        $("profile-id").value = custom.id;
+        updateValidation();
+        $("custom-output").textContent = `Saved ${custom.id}`;
+      };
+
+      refreshSelects();
+      loadProfileEditor();
+      $("validate-input").oninput = updateValidation;
+      $("validate-syntax").onchange = updateValidation;
+      $("to-syntax").onchange = updateValidation;
+      $("translate-section").ontoggle = updateValidation;
+      $("profile-id").onchange = loadProfileEditor;
+      $("custom-peg").oninput = highlightPeg;
+      updateValidation();
+    </script>
+  </body>
+</html>

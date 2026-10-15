@@ -60,3 +60,10 @@ Implement the three core link parsers for Linkity: Wikilink, Markdown, and Raw U
 - `src/index.ts` (main API)
 - `src/types/index.ts` (LinkNode type)
 - `test/parse.test.ts` (test patterns)
+
+## CommonMark and GFM Link Profiles
+
+- [x] Add separate `commonmark` and `gfm` profiles.
+- [x] Use composed Peggy grammar sources: GFM reuses CommonMark link rules and adds only extended autolinks.
+- [x] Resolve full, collapsed, and shortcut references from `ParseContext.referenceDefinitions`.
+- [x] Add authoritative positive and negative CommonMark/GFM fixtures.

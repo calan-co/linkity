@@ -49,3 +49,10 @@ For `[[README.md]]` to resolve correctly, the Obsidian syntax must receive enoug
 - [x] `npm run typecheck -- --pretty false` passed.
 - [x] `npx vitest run` passed: 6 files, 27 tests.
 - [x] `npm run build` passed.
+
+## Refinement: Documented Wikilink Grammar
+
+- [x] Add regressions for documented plain, alias, heading, nested-heading, block, current-note, and embed forms.
+- [x] Reject malformed/nested bracket candidates rather than matching a partial wikilink.
+- [x] Keep Obsidian profile wikilinks-only; Markdown links remain `gfm`.
+- [x] Align the harness PEG preset with optional aliases and embeds.

@@ -154,6 +154,7 @@ See the `examples/` directory for more usage examples:
 
 - `basic-usage.mjs` - Node.js example
 - `browser-usage.html` - Browser example
+- `harness.html` - Development harness for syntax validation, translation, and custom profile testing
 
 ## Migration Notes
 

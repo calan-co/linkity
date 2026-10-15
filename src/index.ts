@@ -9,6 +9,7 @@ export type {
   Match,
   MatchOptions,
   ParseContext,
+  ReferenceDefinition,
   ParseOptions,
   PathAst,
   Provenance,
@@ -21,6 +22,7 @@ export type {
 export { parseMarkdownLink, parseRawUrl, parseWikilink } from "./parsers/index.js";
 export { detectLinkType, visitLinks } from "./utils/index.js";
 export {
+  commonmarkSyntax,
   createSyntaxRegistry,
   getSyntax,
   gfmSyntax,
@@ -64,7 +66,7 @@ export function parseLinks(text: string, options?: ParseOptions): Ast[] {
       node.span ? { ...node, span: { start: node.span.start + start, end: node.span.end + start } } : node;
     const rangeLinks: Ast[] = [];
     if (enableWikilink) rangeLinks.push(...parseWikilink(slice));
-    if (enableMarkdown) rangeLinks.push(...parseMarkdownLink(slice));
+    if (enableMarkdown) rangeLinks.push(...parseMarkdownLink(slice, { referenceDefinitions: options?.referenceDefinitions }));
     if (enableUrl) {
       const occupied = rangeLinks.flatMap((link) => (link.span ? [link.span] : []));
       rangeLinks.push(

@@ -10,6 +10,7 @@ import type {
   RenderResult,
   Syntax,
 } from "../types/index.js";
+import { parse as parseLinkGrammar } from "./generated/link-parser.js";
 
 const PATH_FEATURES: Feature[] = ["anchor", "query", "path-extension", "path-containers"];
 
@@ -72,10 +73,10 @@ function renderPath(path: Ast["path"]): string {
 }
 
 function parseTarget(raw: string): Omit<Ast, "raw" | "label" | "provenance" | "embed"> {
-  const url = raw.match(/^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)(.*)$/);
+  const url = raw.match(/^([A-Za-z][A-Za-z0-9+.-]*):(\/\/([^/?#]*))?(.*)$/);
   const scheme = url?.[1];
-  const authority = url?.[2];
-  let rest = url ? url[3] ?? "" : raw;
+  const authority = url?.[3];
+  let rest = url ? url[4] ?? "" : raw;
 
   let anchor: string | undefined;
   let block: string | undefined;
@@ -105,7 +106,7 @@ function parseTarget(raw: string): Omit<Ast, "raw" | "label" | "provenance" | "e
 }
 
 function renderTarget(ast: Ast): string {
-  const prefix = ast.scheme ? `${ast.scheme}://${ast.authority ?? ""}` : "";
+  const prefix = ast.scheme ? (ast.authority ? `${ast.scheme}://${ast.authority}` : `${ast.scheme}:`) : "";
   const fragment = ast.block ? `#^${ast.block}` : ast.anchor ? `#${ast.anchor}` : "";
   return `${prefix}${renderPath(ast.path)}${renderQuery(ast.query)}${fragment}`;
 }
@@ -129,6 +130,8 @@ function renderSupportedTarget(ast: Ast, syntax: Syntax): string {
 function requiredFeatures(ast: Ast): Feature[] {
   const features = new Set<Feature>();
   if (ast.label) features.add("alias");
+  if (ast.title) features.add("title");
+  if (ast.reference) features.add("reference");
   if (ast.anchor) features.add("anchor");
   if (ast.block) features.add("block");
   if (ast.embed) features.add("embed");
@@ -220,18 +223,28 @@ function validateResolvedFragment(ast: Ast, entry: FileIndexEntry | undefined): 
   }
 }
 
+const WIKILINK = /^(!)?\[\[([^|\[\]]+)(?:\|([^\]]*))?\]\]$/;
+
+function findWikilink(input: string, startIndex = 0): Match | null {
+  const candidate = /!?\[\[[^\[\]]+\]\]/g;
+  candidate.lastIndex = startIndex;
+  let match: RegExpExecArray | null;
+  while ((match = candidate.exec(input)) !== null) {
+    const before = input[match.index - 1];
+    const after = input[match.index + match[0].length];
+    if (before !== "[" && before !== "!" && after !== "]") return spanFrom(match);
+  }
+  return null;
+}
+
 export const obsidianSyntax: Syntax = {
   id: "obsidian",
-  supports: ["alias", "anchor", "block", "embed", "query", "path-extension", "path-containers"],
+  supports: ["alias", "anchor", "block", "embed", "path-extension", "path-containers"],
   match(input: string, options?: MatchOptions) {
-    const startIndex = options?.startIndex ?? 0;
-    const match = /!{0,1}\[\[[^\]]+\]\]/g.exec(input.slice(startIndex));
-    if (!match) return null;
-    match.index += startIndex;
-    return spanFrom(match);
+    return findWikilink(input, options?.startIndex);
   },
   parse(input: string, context?: ParseContext) {
-    const match = input.match(/^(!)?\[\[([^|\]]+)(?:\|([^\]]*))?\]\]$/);
+    const match = input.match(WIKILINK);
     if (!match?.[2]) throw new Error(`Invalid obsidian link: ${input}`);
     const target = resolved(match[2], context);
     const ast: Ast = {
@@ -252,30 +265,169 @@ export const obsidianSyntax: Syntax = {
 
 export const wikilinkSyntax: Syntax = { ...obsidianSyntax, id: "wikilink" };
 
-export const gfmSyntax: Syntax = {
-  id: "gfm",
-  supports: ["alias", "anchor", "query", "path-extension", "path-containers"],
+type GrammarToken = {
+  kind: "inline-link" | "full-reference-link" | "collapsed-reference-link" | "shortcut-reference-link" | "autolink" | "extended-autolink";
+  label: string;
+  destination?: string;
+  title?: string;
+  reference?: string;
+};
+
+type GrammarParser = (input: string) => GrammarToken;
+
+const parseCommonmarkGrammar: GrammarParser = (input) => parseLinkGrammar(input, { startRule: "CommonMarkLink" }) as GrammarToken;
+const parseGfmGrammar: GrammarParser = (input) => parseLinkGrammar(input, { startRule: "GfmLink" }) as GrammarToken;
+
+function normalizeReferenceLabel(label: string): string {
+  return label.trim().replace(/[\t\n ]+/g, " ").toLowerCase();
+}
+
+function referenceDefinition(label: string, context?: ParseContext) {
+  const expected = normalizeReferenceLabel(label);
+  return Object.entries(context?.referenceDefinitions ?? {}).find(([key]) => normalizeReferenceLabel(key) === expected)?.[1];
+}
+
+function candidateEnd(input: string, start: number): number | undefined {
+  if (input[start] === "<") {
+    const close = input.indexOf(">", start + 1);
+    return close < 0 ? undefined : close + 1;
+  }
+  if (input[start] !== "[") return undefined;
+  const close = input.indexOf("]", start + 1);
+  if (close < 0) return undefined;
+  if (input[close + 1] === "[") {
+    const referenceEnd = input.indexOf("]", close + 2);
+    return referenceEnd < 0 ? undefined : referenceEnd + 1;
+  }
+  if (input[close + 1] !== "(") return close + 1;
+
+  let depth = 0;
+  let angleDestination = false;
+  for (let index = close + 2; index < input.length; index++) {
+    const char = input[index];
+    if (char === "\\") {
+      index++;
+      continue;
+    }
+    if (char === "<") angleDestination = true;
+    if (char === ">") angleDestination = false;
+    if (angleDestination) continue;
+    if (char === "(") depth++;
+    if (char === ")") {
+      if (depth === 0) return index + 1;
+      depth--;
+    }
+  }
+  return undefined;
+}
+
+function gfmBareCandidates(input: string, startIndex: number): Array<{ start: number; end: number }> {
+  const candidates: Array<{ start: number; end: number }> = [];
+  const expression = /https?:\/\/[^\s<]+|www\.[^\s<]+|[A-Za-z0-9._+-]+@[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+/g;
+  expression.lastIndex = startIndex;
+  let match: RegExpExecArray | null;
+  while ((match = expression.exec(input)) !== null) {
+    let raw = match[0];
+    raw = raw.replace(/[?!.,:*_~]+$/, "");
+    let opens = 0;
+    let closes = 0;
+    for (const char of raw) {
+      if (char === "(") opens++;
+      if (char === ")") closes++;
+    }
+    while (raw.endsWith(")") && closes > opens) {
+      raw = raw.slice(0, -1);
+      closes--;
+    }
+    if (raw) candidates.push({ start: match.index, end: match.index + raw.length });
+  }
+  return candidates;
+}
+
+function findGrammarMatch(input: string, parser: GrammarParser, startIndex = 0, includeGfmExtensions = false): Match | null {
+  const candidates = gfmBareCandidates(input, startIndex);
+  for (let start = startIndex; start < input.length; start++) {
+    const end = candidateEnd(input, start);
+    if (end) candidates.push({ start, end });
+  }
+
+  candidates.sort((left, right) => left.start - right.start || right.end - left.end);
+  for (const candidate of candidates) {
+    try {
+      const raw = input.slice(candidate.start, candidate.end);
+      const token = parser(raw);
+      if (!includeGfmExtensions && token.kind === "extended-autolink") continue;
+      const before = input[candidate.start - 1];
+      const isWebAutolink = token.kind === "extended-autolink" && !token.destination?.startsWith("mailto:");
+      if (isWebAutolink && before && !/[\s*_~(]/.test(before)) continue;
+      return { raw, span: candidate };
+    } catch {
+      // The grammar decides validity after a linear candidate scan.
+    }
+  }
+  return null;
+}
+
+function parseWithGrammar(input: string, id: "commonmark" | "gfm", parser: GrammarParser, context?: ParseContext): Ast {
+  let token: GrammarToken;
+  try {
+    token = parser(input);
+  } catch {
+    throw new Error(`Invalid ${id} link: ${input}`);
+  }
+
+  const definition = token.reference ? referenceDefinition(token.reference, context) : undefined;
+  if (token.reference && !definition) throw new Error(`Unknown CommonMark reference: ${token.reference}`);
+  const destination = token.destination ?? definition?.destination;
+  if (destination === undefined) throw new Error(`Invalid ${id} link: ${input}`);
+  const referenceStyle = token.kind.replace("-reference-link", "") as "full" | "collapsed" | "shortcut";
+
+  return {
+    raw: input,
+    ...parseTarget(destination),
+    label: { raw: token.label, semantic: token.label ? "literal" : "empty" },
+    ...(token.title ?? definition?.title ? { title: token.title ?? definition?.title } : {}),
+    ...(token.reference ? { reference: { label: token.reference, style: referenceStyle } } : {}),
+    provenance: { syntax: id, rule: token.kind },
+  };
+}
+
+function renderMarkdown(ast: Ast, syntax: Syntax, context?: RenderContext): RenderResult {
+  const target = renderSupportedTarget(ast, syntax);
+  const label = ast.label?.raw ?? target;
+  if (ast.reference) {
+    const suffix = ast.reference.style === "shortcut" ? "" : ast.reference.style === "collapsed" ? "[]" : `[${ast.reference.label}]`;
+    return result(syntax, ast, `[${label}]${suffix}`, context);
+  }
+  if (ast.provenance?.rule === "autolink") return result(syntax, ast, `<${ast.label?.raw ?? target}>`, context);
+  if (ast.provenance?.rule === "extended-autolink") return result(syntax, ast, ast.label?.raw ?? target, context);
+  const title = ast.title ? ` "${ast.title}"` : "";
+  const destination = /[\s()<>]/.test(target) ? `<${target}>` : target;
+  return result(syntax, ast, `[${label}](${destination}${title})`, context);
+}
+
+export const commonmarkSyntax: Syntax = {
+  id: "commonmark",
+  supports: ["alias", "title", "reference", "anchor", "query", "path-extension", "path-containers"],
   match(input: string, options?: MatchOptions) {
-    const startIndex = options?.startIndex ?? 0;
-    const match = /\[[^\]]+\]\([^)]+\)/g.exec(input.slice(startIndex));
-    if (!match) return null;
-    match.index += startIndex;
-    return spanFrom(match);
+    return findGrammarMatch(input, parseCommonmarkGrammar, options?.startIndex);
   },
-  parse(input: string) {
-    const match = input.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-    if (!match?.[1] || !match[2]) throw new Error(`Invalid gfm link: ${input}`);
-    return {
-      raw: input,
-      ...parseTarget(match[2]),
-      label: { raw: match[1], semantic: "literal" },
-      provenance: { syntax: "gfm", rule: "inline-link" },
-    };
+  parse(input: string, context?: ParseContext) {
+    return parseWithGrammar(input, "commonmark", parseCommonmarkGrammar, context);
   },
   render(ast: Ast, context?: RenderContext) {
-    const target = renderSupportedTarget(ast, this);
-    const label = ast.label?.raw ?? ast.path?.resource ?? target;
-    return result(this, ast, `[${label}](${target})`, context);
+    return renderMarkdown(ast, this, context);
+  },
+};
+
+export const gfmSyntax: Syntax = {
+  ...commonmarkSyntax,
+  id: "gfm",
+  match(input: string, options?: MatchOptions) {
+    return findGrammarMatch(input, parseGfmGrammar, options?.startIndex, true);
+  },
+  parse(input: string, context?: ParseContext) {
+    return parseWithGrammar(input, "gfm", parseGfmGrammar, context);
   },
 };
 
@@ -331,7 +483,7 @@ export function createSyntaxRegistry(initial: Syntax[] = []): SyntaxRegistry {
   return registry;
 }
 
-const defaultRegistry = createSyntaxRegistry([gfmSyntax, obsidianSyntax, urlSyntax, wikilinkSyntax]);
+const defaultRegistry = createSyntaxRegistry([commonmarkSyntax, gfmSyntax, obsidianSyntax, urlSyntax, wikilinkSyntax]);
 
 export function registerSyntax(syntax: Syntax): void {
   defaultRegistry.register(syntax);

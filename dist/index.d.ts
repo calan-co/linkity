@@ -1,5 +1,5 @@
 type LegacyLinkType = "wikilink" | "markdown" | "url" | "custom";
-type Feature = "alias" | "anchor" | "block" | "embed" | "query" | "path-extension" | "path-containers";
+type Feature = "alias" | "title" | "reference" | "anchor" | "block" | "embed" | "query" | "path-extension" | "path-containers";
 interface Span {
     start: number;
     end: number;
@@ -28,6 +28,11 @@ interface Ast {
         raw: string;
         semantic?: "literal" | "implicit" | "empty";
     };
+    title?: string;
+    reference?: {
+        label: string;
+        style: "full" | "collapsed" | "shortcut";
+    };
     embed?: boolean;
     provenance?: Provenance;
 }
@@ -51,9 +56,15 @@ interface FileIndex {
     files?: FileIndexEntry[];
     resolvePath?: (target: string, sourcePath?: string) => string | undefined;
 }
+interface ReferenceDefinition {
+    destination: string;
+    title?: string;
+}
 interface ParseContext {
     sourcePath?: string;
     fileIndex?: FileIndex;
+    /** CommonMark reference definitions, keyed by their source label. */
+    referenceDefinitions?: Record<string, ReferenceDefinition>;
 }
 interface RenderContext {
     lossy?: "error" | "warn";
@@ -67,6 +78,7 @@ interface MatchOptions {
 }
 interface ParseOptions {
     enableWikilink?: boolean;
+    referenceDefinitions?: Record<string, ReferenceDefinition>;
     enableMarkdown?: boolean;
     enableUrl?: boolean;
     customSchemes?: string[];
@@ -87,7 +99,7 @@ type LinkityParseOptions = ParseOptions;
 
 declare function parseWikilink(text: string): Ast[];
 
-declare function parseMarkdownLink(text: string): Ast[];
+declare function parseMarkdownLink(text: string, context?: ParseContext): Ast[];
 
 declare function parseRawUrl(text: string, customSchemes?: string[]): Ast[];
 
@@ -100,6 +112,7 @@ declare function visitLinks<T = void>(links: Ast[], visitor: (link: Ast, index: 
 
 declare const obsidianSyntax: Syntax;
 declare const wikilinkSyntax: Syntax;
+declare const commonmarkSyntax: Syntax;
 declare const gfmSyntax: Syntax;
 declare const urlSyntax: Syntax;
 declare function parseLink(input: string, syntax: Syntax, context?: ParseContext): Ast;
@@ -116,4 +129,4 @@ declare function syntaxes(): Syntax[];
 
 declare function parseLinks(text: string, options?: ParseOptions): Ast[];
 
-export { type Ast, type Diagnostic, type Feature, type FileIndex, type LinkNode, type LinkType, type LinkityParseOptions, type Match, type MatchOptions, type ParseContext, type ParseOptions, type PathAst, type Provenance, type RenderContext, type RenderResult, type Span, type Syntax, createSyntaxRegistry, detectLinkType, getSyntax, gfmSyntax, obsidianSyntax, parseLink, parseLinks, parseMarkdownLink, parseRawUrl, parseWikilink, registerSyntax, renderLink, syntaxes, urlSyntax, visitLinks, wikilinkSyntax };
+export { type Ast, type Diagnostic, type Feature, type FileIndex, type LinkNode, type LinkType, type LinkityParseOptions, type Match, type MatchOptions, type ParseContext, type ParseOptions, type PathAst, type Provenance, type ReferenceDefinition, type RenderContext, type RenderResult, type Span, type Syntax, commonmarkSyntax, createSyntaxRegistry, detectLinkType, getSyntax, gfmSyntax, obsidianSyntax, parseLink, parseLinks, parseMarkdownLink, parseRawUrl, parseWikilink, registerSyntax, renderLink, syntaxes, urlSyntax, visitLinks, wikilinkSyntax };

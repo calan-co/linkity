@@ -134,3 +134,15 @@ Linkity uses a bespoke tokenizer/lexer for link extraction, rather than relying 
 - If integration with external ASTs or document models becomes a core use case
 
 ### References
+
+## Obsidian Wikilink Profile
+
+The `obsidian` syntax is wikilinks-only. It supports documented Obsidian forms:
+
+- `[[Note]]` and `[[Note|Display text]]`
+- `[[Note#Heading]]` and nested headings such as `[[Note#Heading#Subheading]]`
+- `[[Note#^block-id]]`
+- current-note heading links such as `[[#Heading]]`
+- embeds/transclusions such as `![[Note]]`, including heading/block/embed variants
+
+Markdown links remain the separate `gfm` profile. Linkity does not use URL query syntax as an Obsidian wikilink feature.

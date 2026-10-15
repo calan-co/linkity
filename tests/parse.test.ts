@@ -61,6 +61,12 @@ describe("parseLinks", () => {
     ]);
   });
 
+  it("resolves CommonMark reference links with supplied definitions", () => {
+    expect(parseLinks("Read [guide][]", { referenceDefinitions: { guide: { destination: "/guide" } } })).toMatchObject([
+      { path: { absolute: true, resource: "guide" }, reference: { style: "collapsed" } },
+    ]);
+  });
+
   it("respects parser off-switches", () => {
     expect(parseLinks("Check [[Page]]", { enableWikilink: false }).some((n) => n.provenance?.syntax === "obsidian")).toBe(false);
     expect(parseLinks("Check [link](https://example.com)", { enableMarkdown: false }).some((n) => n.provenance?.syntax === "gfm")).toBe(false);
