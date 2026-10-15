@@ -21,7 +21,9 @@ AutoLink
 LinkText = chars:LinkTextCharacter* { return chars.join(""); }
 LinkTextCharacter
   = "\\" char:. { return `\\${char}`; }
+  / BalancedLinkText
   / !"[" !"]" char:. { return char; }
+BalancedLinkText = "[" chars:LinkTextCharacter* "]" { return `[${chars.join("")}]`; }
 
 ReferenceLabel = chars:ReferenceCharacter* { return chars.join(""); }
 ReferenceCharacter
@@ -48,7 +50,7 @@ Scheme = first:[A-Za-z] rest:[A-Za-z0-9+.-]+ {
   return scheme;
 }
 Email = local:$([A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+) "@" domain:EmailDomain { return `${local}@${domain}`; }
-EmailDomain = first:EmailDomainSegment "." rest:EmailDomainSegment+ { return [first, ...rest].join("."); }
+EmailDomain = first:EmailDomainSegment rest:("." segment:EmailDomainSegment { return segment; })+ { return [first, ...rest].join("."); }
 EmailDomainSegment = first:[A-Za-z0-9] middle:[A-Za-z0-9-]* last:([A-Za-z0-9]?) {
   const segment = `${first}${middle.join("")}${last ?? ""}`;
   if (segment.endsWith("-")) expected("email domain segment ending alphanumeric");

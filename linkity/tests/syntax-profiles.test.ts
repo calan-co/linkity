@@ -24,3 +24,10 @@ describe("additive syntax profiles", () => {
     });
   });
 });
+
+it("supports balanced CommonMark labels and escaped title quotes", async () => {
+  const { commonmarkSyntax } = await import("../src/index.js");
+  expect(commonmarkSyntax.match("[a [b]](/url)")?.raw).toBe("[a [b]](/url)");
+  expect(commonmarkSyntax.parse("<a@foo.bar.baz>")).toMatchObject({ scheme: "mailto" });
+  expect(commonmarkSyntax.render({ path: { resource: "url", absolute: true }, label: { raw: "a" }, title: 'a "quote' }).value).toBe('[a](/url "a \\"quote")');
+});
