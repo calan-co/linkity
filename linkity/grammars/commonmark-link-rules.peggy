@@ -39,7 +39,8 @@ ParenthesizedDestination = "(" chars:BareDestinationCharacter* ")" { return `(${
 
 Title
   = Spacing title:(QuotedTitle / ApostropheTitle / ParenthesizedTitle) { return title; }
-QuotedTitle = "\"" chars:(![\"\n] char:.)* "\"" { return chars.map((item) => item[1]).join(""); }
+QuotedTitle = "\"" chars:QuotedTitleCharacter* "\"" { return chars.join(""); }
+QuotedTitleCharacter = "\\" char:. { return char; } / ![\"\n] char:. { return char; }
 ApostropheTitle = "'" chars:(!['\n] char:.)* "'" { return chars.map((item) => item[1]).join(""); }
 ParenthesizedTitle = "(" chars:(![)\n] char:.)* ")" { return chars.map((item) => item[1]).join(""); }
 
