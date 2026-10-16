@@ -23,7 +23,7 @@ LinkTextCharacter
   = "\\" char:. { return `\\${char}`; }
   / BalancedLinkText
   / !"[" !"]" char:. { return char; }
-BalancedLinkText = "[" chars:LinkTextCharacter* "]" { return `[${chars.join("")}]`; }
+BalancedLinkText = "[" chars:LinkTextCharacter* "]" !"(" { return `[${chars.join("")}]`; }
 
 ReferenceLabel = chars:ReferenceCharacter* { return chars.join(""); }
 ReferenceCharacter
