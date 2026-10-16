@@ -36,3 +36,10 @@ it("gives an inner CommonMark link precedence over an outer label", async () => 
   const { commonmarkSyntax } = await import("../src/index.js");
   expect(commonmarkSyntax.match("[a [b](inner)](outer)")?.raw).toBe("[b](inner)");
 });
+
+it("decodes escaped CommonMark title quotes", async () => {
+  const { commonmarkSyntax } = await import("../src/index.js");
+  const ast = commonmarkSyntax.parse('[a](/url "a \\"quote")');
+  expect(ast.title).toBe('a "quote');
+  expect(commonmarkSyntax.render(ast).value).toBe('[a](/url "a \\"quote")');
+});
