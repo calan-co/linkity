@@ -43,3 +43,8 @@ it("decodes escaped CommonMark title quotes", async () => {
   expect(ast.title).toBe('a "quote');
   expect(commonmarkSyntax.render(ast).value).toBe('[a](/url "a \\"quote")');
 });
+
+it("preserves title backslashes before non-punctuation", async () => {
+  const { commonmarkSyntax } = await import("../src/index.js");
+  expect(commonmarkSyntax.parse('[a](/url "a \\z")').title).toBe("a \\z");
+});
