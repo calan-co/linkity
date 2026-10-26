@@ -12,34 +12,4 @@ permissions:
 jobs:
   hygiene:
     uses: calan-co/cicd-shared-pipeline/.github/workflows/reusable-repository-hygiene.yml@v1
-  linkity:
-    uses: calan-co/cicd-shared-pipeline/.github/workflows/reusable-node-ci.yml@v1
-    with:
-      node-version: "22"
-      package-manager: npm
-      cache-dependency-path: linkity/package-lock.json
-      working-directory: linkity
-      install-command: npm ci --ignore-scripts --include=dev
-      enable-lint: true
-      enable-typecheck: true
-      enable-tests: true
-      enable-build: true
-      lint-command: npm run lint:code
-      typecheck-command: npm run typecheck
-      test-command: npm test
-      build-command: npm run build
-  vscode-extension:
-    uses: calan-co/cicd-shared-pipeline/.github/workflows/reusable-node-ci.yml@v1
-    with:
-      node-version: "22"
-      package-manager: npm
-      cache-dependency-path: vscode-extension/package-lock.json
-      working-directory: vscode-extension
-      install-command: npm ci --ignore-scripts --include=dev
-      # ponytail: existing extension lint debt; re-enable after it reaches zero.
-      enable-lint: false
-      enable-typecheck: false
-      enable-tests: true
-      enable-build: true
-      test-command: npm test
-      build-command: npm run compile
+  # ponytail: nested packages retain their established repository CI until they can share one setup safely.
